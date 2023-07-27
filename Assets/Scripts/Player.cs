@@ -8,11 +8,13 @@ public class Player : MonoBehaviour {
     [SerializeField] private float rotateSpeed = 10f;
     private Transform playTransform;
 
+    private bool isWalking;
+
     private void Awake() {
         playTransform = transform;
     }
 
-    void Update() {
+    private void Update() {
         var inputVector = new Vector2();
 
         if (Input.GetKey(KeyCode.W)) {
@@ -36,6 +38,12 @@ public class Player : MonoBehaviour {
         var moveDir = new Vector3(inputVector.x, 0, inputVector.y);
         playTransform.position += moveDir * moveSpeed * Time.deltaTime;
         playTransform.forward = Vector3.Slerp(playTransform.forward, moveDir, rotateSpeed * Time.deltaTime);
-        Debug.Log("moveDir:" + moveDir + " ,forward:" + playTransform.forward);
+
+        isWalking = moveDir != Vector3.zero;
+        Debug.Log("isWalking: " + isWalking);
+    }
+
+    public bool IsWalking() {
+        return isWalking;
     }
 }
