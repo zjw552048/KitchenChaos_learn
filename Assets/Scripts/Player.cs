@@ -1,10 +1,16 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour {
-    
-    [SerializeField] private float moveSpeed = 7;
+    [SerializeField] private float moveSpeed = 7f;
+    [SerializeField] private float rotateSpeed = 10f;
+    private Transform playTransform;
+
+    private void Awake() {
+        playTransform = transform;
+    }
 
     void Update() {
         var inputVector = new Vector2();
@@ -28,6 +34,8 @@ public class Player : MonoBehaviour {
         inputVector.Normalize();
 
         var moveDir = new Vector3(inputVector.x, 0, inputVector.y);
-        transform.position += moveDir * moveSpeed * Time.deltaTime;
+        playTransform.position += moveDir * moveSpeed * Time.deltaTime;
+        playTransform.forward = Vector3.Slerp(playTransform.forward, moveDir, rotateSpeed * Time.deltaTime);
+        Debug.Log("moveDir:" + moveDir + " ,forward:" + playTransform.forward);
     }
 }
