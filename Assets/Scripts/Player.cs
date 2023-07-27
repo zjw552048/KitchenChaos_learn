@@ -17,12 +17,11 @@ public class Player : MonoBehaviour {
         playTransform = transform;
     }
 
-    private void Update() {
-        HandleMovement();
-        HandleInteractive();
+    private void Start() {
+        playerInput.InteractAction += PlayerInputInteractAction;
     }
 
-    private void HandleInteractive() {
+    private void PlayerInputInteractAction() {
         if (!Physics.Raycast(
                 playTransform.position,
                 playTransform.forward,
@@ -36,7 +35,11 @@ public class Player : MonoBehaviour {
             return;
         }
 
-        counter.Interactive();
+        counter.Interact();
+    }
+
+    private void Update() {
+        HandleMovement();
     }
 
     private void HandleMovement() {

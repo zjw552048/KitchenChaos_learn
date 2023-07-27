@@ -1,8 +1,7 @@
 using UnityEngine;
 
-public class ClearCounter : MonoBehaviour
-{
-    public void Interactive() {
-        Debug.Log("Interactive with " + transform);
+public class ClearCounter : MonoBehaviour {
+    public void Interact() {
+        Debug.Log("Interact with " + transform);
     }
 }
