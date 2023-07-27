@@ -3,7 +3,10 @@ using UnityEngine;
 public class Player : MonoBehaviour {
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private float rotateSpeed = 10f;
-    [SerializeField] private float playerRadius= 0.7f;
+
+    [SerializeField] private float interactiveDistance = 2f;
+    [SerializeField] private LayerMask interactiveLayerMask;
+    [SerializeField] private float playerRadius = 0.7f;
     [SerializeField] private float playerHeight = 2f;
     [SerializeField] private PlayerInput playerInput;
     private Transform playTransform;
@@ -15,6 +18,28 @@ public class Player : MonoBehaviour {
     }
 
     private void Update() {
+        HandleMovement();
+        HandleInteractive();
+    }
+
+    private void HandleInteractive() {
+        if (!Physics.Raycast(
+                playTransform.position,
+                playTransform.forward,
+                out var hitInfo,
+                interactiveDistance,
+                interactiveLayerMask)) {
+            return;
+        }
+
+        if (!hitInfo.transform.TryGetComponent(out ClearCounter counter)) {
+            return;
+        }
+
+        counter.Interactive();
+    }
+
+    private void HandleMovement() {
         var inputVector = playerInput.GetMovementVector2Normalized();
 
         var moveDir = new Vector3(inputVector.x, 0, inputVector.y);
