@@ -1,20 +1,22 @@
-using System;
 using UnityEngine;
 
-public class ClearCounter : MonoBehaviour {
+public class ClearCounter : MonoBehaviour, IKitchenObjectParent {
     [SerializeField] private Transform counterTopPoint;
     [SerializeField] private KitchenObjectSO kitchenObjectSo;
 
     private KitchenObject kitchenObject;
 
-    public void Interact() {
+    public void Interact(Player player) {
         if (kitchenObject == null) {
             var kitchenObjectTransform = Instantiate(kitchenObjectSo.prefab);
-            kitchenObjectTransform.GetComponent<KitchenObject>().SetClearCounter(this);
+            kitchenObjectTransform.GetComponent<KitchenObject>().SetKitchenObjectParent(this);
         } else {
             Debug.Log("Interact with has KitchenObject counter");
+            kitchenObject.SetKitchenObjectParent(player);
         }
     }
+
+    #region IKitchenObjectParent实现
 
     public Transform GetKitchenObjectFollowTransform() {
         return counterTopPoint;
@@ -32,14 +34,6 @@ public class ClearCounter : MonoBehaviour {
         return kitchenObject != null;
     }
 
-    [SerializeField] private ClearCounter otherClearCounter;
-    [SerializeField] private bool testing;
+    #endregion
 
-    private void Update() {
-        if (testing && Input.GetKey(KeyCode.T)) {
-            if (HasKitchenObject()) {
-                kitchenObject.SetClearCounter(otherClearCounter);
-            }
-        }
-    }
 }

@@ -1,14 +1,19 @@
 using System;
 using UnityEngine;
 
-public class Player : MonoBehaviour {
-    [SerializeField] private float moveSpeed = 7f;
+public class Player : MonoBehaviour, IKitchenObjectParent {
+    public static Player Instance { get; private set; }
+
+    [Header("速度参数")] [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private float rotateSpeed = 10f;
 
-    [SerializeField] private float interactiveDistance = 2f;
-    [SerializeField] private LayerMask interactiveLayerMask;
-    [SerializeField] private float playerRadius = 0.7f;
+    [Header("体积参数")] [SerializeField] private float playerRadius = 0.7f;
     [SerializeField] private float playerHeight = 2f;
+
+    [Header("交互参数")] [SerializeField] private float interactiveDistance = 2f;
+    [SerializeField] private LayerMask interactiveLayerMask;
+
+    [Header("持有物品点")] [SerializeField] private Transform kitchenObjectHoldPoint;
 
     private Transform playTransform;
 
@@ -16,7 +21,8 @@ public class Player : MonoBehaviour {
 
     private ClearCounter selectedCounter;
 
-    public static Player Instance { get; private set; }
+    private KitchenObject holdKitchenObject;
+
     public event Action<ClearCounter> SelectedCounterChanged;
 
     private void Awake() {
@@ -37,7 +43,7 @@ public class Player : MonoBehaviour {
             return;
         }
 
-        selectedCounter.Interact();
+        selectedCounter.Interact(this);
     }
 
     private void Update() {
@@ -131,4 +137,24 @@ public class Player : MonoBehaviour {
     public bool IsWalking() {
         return isWalking;
     }
+
+    #region IKitchenObjectParent实现
+
+    public Transform GetKitchenObjectFollowTransform() {
+        return kitchenObjectHoldPoint;
+    }
+
+    public KitchenObject GetKitchenObject() {
+        return holdKitchenObject;
+    }
+
+    public void SetKitChenObject(KitchenObject targetObject) {
+        holdKitchenObject = targetObject;
+    }
+
+    public bool HasKitchenObject() {
+        return holdKitchenObject != null;
+    }
+
+    #endregion
 }
