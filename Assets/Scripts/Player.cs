@@ -40,7 +40,7 @@ public class Player : MonoBehaviour {
         HandleMovement();
         HandleInteract();
     }
-    
+
     private void HandleMovement() {
         var inputVector = PlayerInput.Instance.GetMovementVector2Normalized();
 
@@ -117,10 +117,14 @@ public class Player : MonoBehaviour {
     }
 
     private void ChangeSelectedCounter(ClearCounter counter) {
+        if (selectedCounter == null && counter != null ||
+            selectedCounter != null && counter == null) {
+            SelectedCounterChanged?.Invoke(counter);
+        }
+
         selectedCounter = counter;
-        SelectedCounterChanged?.Invoke(counter);
     }
-    
+
     public bool IsWalking() {
         return isWalking;
     }
