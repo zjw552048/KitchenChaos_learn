@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SelectedCounterVistural : MonoBehaviour {
+public class SelectedCounterVistual : MonoBehaviour {
 
     private ClearCounter counter;
     [SerializeField]private GameObject counterSelectedVisual;
@@ -11,6 +11,10 @@ public class SelectedCounterVistural : MonoBehaviour {
 
     private void Start() {
         Player.Instance.SelectedCounterChanged += InstanceOnSelectedCounterChanged;
+    }
+
+    private void OnDestroy() {
+        Player.Instance.SelectedCounterChanged -= InstanceOnSelectedCounterChanged;
     }
 
     private void InstanceOnSelectedCounterChanged(ClearCounter selectedCounter) {

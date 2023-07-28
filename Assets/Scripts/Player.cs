@@ -28,6 +28,10 @@ public class Player : MonoBehaviour {
         PlayerInput.Instance.InteractAction += PlayerInputOnInteractAction;
     }
 
+    private void OnDestroy() {
+        PlayerInput.Instance.InteractAction -= PlayerInputOnInteractAction;
+    }
+
     private void PlayerInputOnInteractAction() {
         if (selectedCounter == null) {
             return;
