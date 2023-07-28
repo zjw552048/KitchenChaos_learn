@@ -23,7 +23,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
 
     private KitchenObject holdKitchenObject;
 
-    public event Action<BaseCounter> SelectedCounterChanged;
+    public event Action<BaseCounter> SelectedCounterChangedAction;
 
     private void Awake() {
         Instance = this;
@@ -128,7 +128,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
 
     private void ChangeSelectedCounter(BaseCounter counter) {
         if (selectedCounter != counter) {
-            SelectedCounterChanged?.Invoke(counter);
+            SelectedCounterChangedAction?.Invoke(counter);
         }
 
         selectedCounter = counter;

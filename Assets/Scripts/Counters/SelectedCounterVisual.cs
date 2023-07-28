@@ -11,14 +11,14 @@ public class SelectedCounterVistual : MonoBehaviour {
     }
 
     private void Start() {
-        Player.Instance.SelectedCounterChanged += InstanceOnSelectedCounterChanged;
+        Player.Instance.SelectedCounterChangedAction += OnSelectedCounterChangedAction;
     }
 
     private void OnDestroy() {
-        Player.Instance.SelectedCounterChanged -= InstanceOnSelectedCounterChanged;
+        Player.Instance.SelectedCounterChangedAction -= OnSelectedCounterChangedAction;
     }
 
-    private void InstanceOnSelectedCounterChanged(BaseCounter selectedCounter) {
+    private void OnSelectedCounterChangedAction(BaseCounter selectedCounter) {
         counterSelectedVisual.SetActive(counter == selectedCounter);
     }
 }
