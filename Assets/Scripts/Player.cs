@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Player : MonoBehaviour {
@@ -8,42 +9,40 @@ public class Player : MonoBehaviour {
     [SerializeField] private LayerMask interactiveLayerMask;
     [SerializeField] private float playerRadius = 0.7f;
     [SerializeField] private float playerHeight = 2f;
-    [SerializeField] private PlayerInput playerInput;
+
     private Transform playTransform;
 
     private bool isWalking;
 
+    private ClearCounter selectedCounter;
+
+    public static Player Instance { get; private set; }
+    public event Action<ClearCounter> SelectedCounterChanged;
+
     private void Awake() {
+        Instance = this;
         playTransform = transform;
     }
 
     private void Start() {
-        playerInput.InteractAction += PlayerInputInteractAction;
+        PlayerInput.Instance.InteractAction += PlayerInputOnInteractAction;
     }
 
-    private void PlayerInputInteractAction() {
-        if (!Physics.Raycast(
-                playTransform.position,
-                playTransform.forward,
-                out var hitInfo,
-                interactiveDistance,
-                interactiveLayerMask)) {
+    private void PlayerInputOnInteractAction() {
+        if (selectedCounter == null) {
             return;
         }
 
-        if (!hitInfo.transform.TryGetComponent(out ClearCounter counter)) {
-            return;
-        }
-
-        counter.Interact();
+        selectedCounter.Interact();
     }
 
     private void Update() {
         HandleMovement();
+        HandleInteract();
     }
-
+    
     private void HandleMovement() {
-        var inputVector = playerInput.GetMovementVector2Normalized();
+        var inputVector = PlayerInput.Instance.GetMovementVector2Normalized();
 
         var moveDir = new Vector3(inputVector.x, 0, inputVector.y);
         var moveDistance = moveSpeed * Time.deltaTime;
@@ -94,6 +93,34 @@ public class Player : MonoBehaviour {
         isWalking = moveDir != Vector3.zero;
     }
 
+    private void HandleInteract() {
+        if (!Physics.Raycast(
+                playTransform.position,
+                playTransform.forward,
+                out var hitInfo,
+                interactiveDistance,
+                interactiveLayerMask)) {
+            ChangeSelectedCounter(null);
+            return;
+        }
+
+        if (!hitInfo.transform.TryGetComponent(out ClearCounter counter)) {
+            ChangeSelectedCounter(null);
+            return;
+        }
+
+        if (counter != null && counter == selectedCounter) {
+            return;
+        }
+
+        ChangeSelectedCounter(counter);
+    }
+
+    private void ChangeSelectedCounter(ClearCounter counter) {
+        selectedCounter = counter;
+        SelectedCounterChanged?.Invoke(counter);
+    }
+    
     public bool IsWalking() {
         return isWalking;
     }

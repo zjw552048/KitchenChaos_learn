@@ -3,6 +3,11 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerInput : MonoBehaviour {
+    public static PlayerInput Instance { get; private set; }
+    
+    /**
+     * InputActions资产自动生成的脚本
+     */
     private PlayerInputActions playerInputActions;
 
     public event Action InteractAction;
@@ -12,6 +17,8 @@ public class PlayerInput : MonoBehaviour {
         playerInputActions.Player.Enable();
 
         playerInputActions.Player.Interact.performed+= OnInteractPerformed;
+
+        Instance = this;
     }
 
     private void OnInteractPerformed(InputAction.CallbackContext obj) {
