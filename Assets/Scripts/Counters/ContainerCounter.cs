@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 public class ContainerCounter : BaseCounter {
-    [SerializeField] private KitchenObjectSO kitchenObjectSo;
+    [SerializeField] private KitchenObjectSo kitchenObjectSo;
     [SerializeField] private SpriteRenderer kitchenObjectIcon;
 
     public event Action PlayerHoldKitchenObjectAction;
