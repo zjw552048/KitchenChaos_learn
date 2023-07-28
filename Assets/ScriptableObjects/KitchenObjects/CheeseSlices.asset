@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 954f4b2beebf4674b8253109ef68aee7, type: 3}
   m_Name: CheeseSlices
   m_EditorClassIdentifier: 
-  type: Cheese Slices
+  objectName: Cheese Slices
   icon: {fileID: 21300000, guid: 549cb4f2b86d1b84d8cd41c1cfde26c8, type: 3}
   prefab: {fileID: 2495333537243246918, guid: a2e10d7ec99f3e94eb45c9cf7095f92f, type: 3}
-  cutOutputSO: {fileID: 0}
+  cutOutputSo: {fileID: 0}
+  needCutCount: 0
