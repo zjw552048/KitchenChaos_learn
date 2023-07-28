@@ -369,6 +369,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 2400204563961091980}
+    - targetCorrespondingSourceObject: {fileID: 6900177071243751017, guid: c2a7a961e7549d14a977815d260785c7,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5674657747191911434}
   m_SourcePrefab: {fileID: 100100000, guid: c2a7a961e7549d14a977815d260785c7, type: 3}
 --- !u!4 &4204821013289565825 stripped
 Transform:
@@ -415,6 +419,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiParent: {fileID: 5465916175141404110}
   cuttingProgressBarImage: {fileID: 6380065436014427004}
+--- !u!114 &5674657747191911434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9221682642642509847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08399db2397205e47ae203f386bed6e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 5478888769723004576}
 --- !u!1001 &5069448586497893509
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -614,6 +631,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d72bee846803d074784ffb8f64e993ca, type: 3}
+--- !u!95 &5478888769723004576 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 2831942792982843299, guid: d72bee846803d074784ffb8f64e993ca,
+    type: 3}
+  m_PrefabInstance: {fileID: 7729857811132135683}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6121530705544633768 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4589716710238282923, guid: d72bee846803d074784ffb8f64e993ca,

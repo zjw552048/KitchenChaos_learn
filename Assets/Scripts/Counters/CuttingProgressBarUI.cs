@@ -13,14 +13,14 @@ public class CuttingProgressBarUI : MonoBehaviour {
     }
 
     private void Start() {
-        counter.PlayerCutKitchenObjectAction += OnPlayerCutKitchenObjectAction;
+        counter.RefreshCuttingProgressAction += OnRefreshCuttingProgressAction;
 
         cuttingProgressBarImage.fillAmount = 0f;
 
         Hide();
     }
 
-    private void OnPlayerCutKitchenObjectAction(float progress) {
+    private void OnRefreshCuttingProgressAction(float progress) {
         cuttingProgressBarImage.fillAmount = progress;
         if (progress == 0.0f || Math.Abs(progress - 1.0f) < float.Epsilon) {
             Hide();
