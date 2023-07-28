@@ -6,6 +6,7 @@ public abstract class BaseCounter : MonoBehaviour, IKitchenObjectParent {
     private KitchenObject kitchenObject;
 
     public abstract void Interact(Player player);
+    public abstract void InteractAlternate(Player player);
 
     #region IKitchenObjectParent实现
 

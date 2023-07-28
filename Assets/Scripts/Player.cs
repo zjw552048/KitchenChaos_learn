@@ -32,10 +32,12 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
 
     private void Start() {
         PlayerInput.Instance.InteractAction += PlayerInputOnInteractAction;
+        PlayerInput.Instance.InteractAlternateAction += PlayerInputOnInteractAlternateAction;
     }
 
     private void OnDestroy() {
         PlayerInput.Instance.InteractAction -= PlayerInputOnInteractAction;
+        PlayerInput.Instance.InteractAlternateAction -= PlayerInputOnInteractAlternateAction;
     }
 
     private void PlayerInputOnInteractAction() {
@@ -44,6 +46,14 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
         }
 
         selectedCounter.Interact(this);
+    }
+    
+    private void PlayerInputOnInteractAlternateAction() {
+        if (selectedCounter == null) {
+            return;
+        }
+
+        selectedCounter.InteractAlternate(this);
     }
 
     private void Update() {
