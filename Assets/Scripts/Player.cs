@@ -47,7 +47,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
 
         selectedCounter.Interact(this);
     }
-    
+
     private void PlayerInputOnInteractAlternateAction() {
         if (selectedCounter == null) {
             return;
@@ -63,15 +63,18 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
 
     private void HandleMovement() {
         var inputVector = PlayerInput.Instance.GetMovementVector2Normalized();
-
         var moveDir = new Vector3(inputVector.x, 0, inputVector.y);
-        var moveDistance = moveSpeed * Time.deltaTime;
+        isWalking = moveDir != Vector3.zero;
+        if (!isWalking) {
+            return;
+        }
 
         // 更新角度
         playTransform.forward = Vector3.Slerp(playTransform.forward, moveDir, rotateSpeed * Time.deltaTime);
 
         // check move on x and y dir
         var playerPos = playTransform.position;
+        var moveDistance = moveSpeed * Time.deltaTime;
         var canMove = !Physics.CapsuleCast(
             playerPos,
             playerPos + Vector3.up * playerHeight,
@@ -111,8 +114,6 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
         if (canMove) {
             playTransform.position += moveDir * moveDistance;
         }
-
-        isWalking = moveDir != Vector3.zero;
     }
 
     private void HandleInteract() {
