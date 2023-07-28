@@ -2,11 +2,12 @@ using UnityEngine;
 
 public class SelectedCounterVistual : MonoBehaviour {
 
-    private ClearCounter counter;
     [SerializeField]private GameObject counterSelectedVisual;
+    
+    private BaseCounter counter;
 
     private void Awake() {
-        counter = GetComponent<ClearCounter>();
+        counter = GetComponent<BaseCounter>();
     }
 
     private void Start() {
@@ -17,7 +18,7 @@ public class SelectedCounterVistual : MonoBehaviour {
         Player.Instance.SelectedCounterChanged -= InstanceOnSelectedCounterChanged;
     }
 
-    private void InstanceOnSelectedCounterChanged(ClearCounter selectedCounter) {
+    private void InstanceOnSelectedCounterChanged(BaseCounter selectedCounter) {
         counterSelectedVisual.SetActive(counter == selectedCounter);
     }
 }

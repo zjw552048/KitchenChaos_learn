@@ -19,11 +19,11 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
 
     private bool isWalking;
 
-    private ClearCounter selectedCounter;
+    private BaseCounter selectedCounter;
 
     private KitchenObject holdKitchenObject;
 
-    public event Action<ClearCounter> SelectedCounterChanged;
+    public event Action<BaseCounter> SelectedCounterChanged;
 
     private void Awake() {
         Instance = this;
@@ -114,7 +114,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
             return;
         }
 
-        if (!hitInfo.transform.TryGetComponent(out ClearCounter counter)) {
+        if (!hitInfo.transform.TryGetComponent(out BaseCounter counter)) {
             ChangeSelectedCounter(null);
             return;
         }
@@ -126,7 +126,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
         ChangeSelectedCounter(counter);
     }
 
-    private void ChangeSelectedCounter(ClearCounter counter) {
+    private void ChangeSelectedCounter(BaseCounter counter) {
         if (selectedCounter != counter) {
             SelectedCounterChanged?.Invoke(counter);
         }
