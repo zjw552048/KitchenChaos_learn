@@ -3,6 +3,7 @@ using UnityEngine;
 public class KitchenObject : MonoBehaviour {
     private KitchenObjectSo kitchenObjectSo;
     private IKitchenObjectParent kitchenObjectParent;
+    private int currentCutCount;
 
     private void SetKitchenObjectSo(KitchenObjectSo targetKitchenObjectSo) {
         kitchenObjectSo = targetKitchenObjectSo;
@@ -10,6 +11,22 @@ public class KitchenObject : MonoBehaviour {
 
     public KitchenObjectSo GetKitchenObjectSo() {
         return kitchenObjectSo;
+    }
+
+    public float GetCurrentCutProgress() {
+        if (kitchenObjectSo.needCutCount == 0) {
+            return 0f;
+        }
+        return (float) currentCutCount / kitchenObjectSo.needCutCount;
+    }
+
+    public float AddCutCountAndReturnProgress() {
+        if (kitchenObjectSo.needCutCount == 0) {
+            return 0f;
+        }
+
+        currentCutCount++;
+        return (float) currentCutCount / kitchenObjectSo.needCutCount;
     }
 
     public void SetKitchenObjectParent(IKitchenObjectParent targetParent) {

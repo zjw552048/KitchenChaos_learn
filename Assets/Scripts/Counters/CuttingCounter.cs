@@ -1,4 +1,8 @@
+using System;
+using UnityEngine;
+
 public class CuttingCounter : BaseCounter {
+    public event Action<float> PlayerCutKitchenObjectAction;
 
     public override void Interact(Player player) {
         if (player.HasKitchenObject()) {
@@ -6,12 +10,18 @@ public class CuttingCounter : BaseCounter {
                 // player手持物体，counter被占用，无逻辑
             } else {
                 // player手持物体，counter空闲，放下物体
-                player.GetKitchenObject().SetKitchenObjectParent(this);
+                var kitchenObject = player.GetKitchenObject();
+                kitchenObject.SetKitchenObjectParent(this);
+                // 隐藏进度条
+                var cutProgress = kitchenObject.GetCurrentCutProgress();
+                PlayerCutKitchenObjectAction?.Invoke(cutProgress);
             }
         } else {
             if (HasKitchenObject()) {
                 // player未手持物体，counter被占用，拾取物体
                 GetKitchenObject().SetKitchenObjectParent(player);
+                // 隐藏进度条
+                PlayerCutKitchenObjectAction?.Invoke(0f);
             } else {
                 // player未手持物体，counter空闲，无逻辑
             }
@@ -27,6 +37,13 @@ public class CuttingCounter : BaseCounter {
         var kitchenObjectSo = kitchenObject.GetKitchenObjectSo();
         var cutOutputSo = kitchenObjectSo.cutOutputSo;
         if (cutOutputSo == null) {
+            return;
+        }
+
+        var cutProgress = kitchenObject.AddCutCountAndReturnProgress();
+        PlayerCutKitchenObjectAction?.Invoke(cutProgress);
+
+        if (cutProgress < 1) {
             return;
         }
 
