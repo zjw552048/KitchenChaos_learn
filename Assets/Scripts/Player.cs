@@ -117,8 +117,7 @@ public class Player : MonoBehaviour {
     }
 
     private void ChangeSelectedCounter(ClearCounter counter) {
-        if (selectedCounter == null && counter != null ||
-            selectedCounter != null && counter == null) {
+        if (selectedCounter != counter) {
             SelectedCounterChanged?.Invoke(counter);
         }
 
