@@ -123,6 +123,18 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &298629499 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4341302431161698413, guid: c2a7a961e7549d14a977815d260785c7,
+    type: 3}
+  m_PrefabInstance: {fileID: 456476485}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 170c4395b10c9ad4cb816bd798bfc997, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -413,6 +425,18 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 1
+--- !u!114 &442189075 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4341302431161698413, guid: c2a7a961e7549d14a977815d260785c7,
+    type: 3}
+  m_PrefabInstance: {fileID: 4723538155891142768}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 170c4395b10c9ad4cb816bd798bfc997, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &456476485
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -476,10 +500,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4341302431161698413, guid: c2a7a961e7549d14a977815d260785c7,
+        type: 3}
+      propertyPath: testing
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4341302431161698413, guid: c2a7a961e7549d14a977815d260785c7,
+        type: 3}
+      propertyPath: kitchenObjectSo
+      value: 
+      objectReference: {fileID: 11400000, guid: 43c82852a6c36ab47940000aba1448a3,
+        type: 2}
+    - target: {fileID: 4341302431161698413, guid: c2a7a961e7549d14a977815d260785c7,
+        type: 3}
+      propertyPath: otherClearCounter
+      value: 
+      objectReference: {fileID: 442189075}
     - target: {fileID: 6900177071243751017, guid: c2a7a961e7549d14a977815d260785c7,
         type: 3}
       propertyPath: m_Name
-      value: ClearCounter (1)
+      value: ClearCounter_Tomato
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1069,10 +1109,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4341302431161698413, guid: c2a7a961e7549d14a977815d260785c7,
+        type: 3}
+      propertyPath: kitchenObjectSo
+      value: 
+      objectReference: {fileID: 11400000, guid: 169bf132700b35b438d9d57d52c306ed,
+        type: 2}
+    - target: {fileID: 4341302431161698413, guid: c2a7a961e7549d14a977815d260785c7,
+        type: 3}
+      propertyPath: otherClearCounter
+      value: 
+      objectReference: {fileID: 298629499}
     - target: {fileID: 6900177071243751017, guid: c2a7a961e7549d14a977815d260785c7,
         type: 3}
       propertyPath: m_Name
-      value: ClearCounter
+      value: ClearCounter_CheeseBlock
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
