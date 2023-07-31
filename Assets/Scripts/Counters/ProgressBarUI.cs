@@ -10,6 +10,10 @@ public class ProgressBarUI : MonoBehaviour {
 
     private void Awake() {
         hasProgress = hasProgressGameObject.GetComponent<IHasProgress>();
+        if (hasProgress == null) {
+            Debug.LogError(
+                "ProgressBarUI init error since hasProgressGameObject does not has Component which implement IHasProgress!");
+        }
     }
 
     private void Start() {
