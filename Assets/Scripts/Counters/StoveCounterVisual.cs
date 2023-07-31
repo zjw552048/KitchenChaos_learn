@@ -1,6 +1,7 @@
 using UnityEngine;
 
 public class StoveCounterVisual : MonoBehaviour {
+    
     [SerializeField] private GameObject particlesGameObject;
     [SerializeField] private GameObject stoveOnGameObjects;
     private StoveCounter stoveCounter;

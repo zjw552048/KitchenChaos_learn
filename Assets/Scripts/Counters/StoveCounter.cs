@@ -74,7 +74,6 @@ public class StoveCounter : BaseCounter, IHasProgress {
                 throw new ArgumentOutOfRangeException();
         }
 
-        Debug.Log("StoveState: " + stoveState);
     }
 
     public override void Interact(Player player) {
