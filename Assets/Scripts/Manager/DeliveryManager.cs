@@ -9,6 +9,9 @@ public class DeliveryManager : MonoBehaviour {
     [SerializeField] private RecipeListSo recipeListSo;
     private List<RecipeSo> waitingRecipeSos;
 
+    public event Action SpawnRecipeAction;
+    public event Action CompleteRecipeAction;
+
     private float spawnRecipeTimer;
     private const float SPAWN_RECIPE_INTERVAL = 4f;
     private const int MAX_WAITING_RECIPE_COUNT = 4;
@@ -32,6 +35,7 @@ public class DeliveryManager : MonoBehaviour {
 
         var newRecipeSo = recipeListSo.recipeSos[Random.Range(0, recipeListSo.recipeSos.Length)];
         waitingRecipeSos.Add(newRecipeSo);
+        SpawnRecipeAction?.Invoke();
         Debug.Log("newRecipeSo: " + newRecipeSo.recipeName);
     }
 
@@ -66,10 +70,15 @@ public class DeliveryManager : MonoBehaviour {
                 Debug.Log("player delivery the correct recipe, which index: " + i + ", recipeName: " +
                           waitingRecipeSos[i].recipeName);
                 waitingRecipeSos.RemoveAt(i);
+                CompleteRecipeAction?.Invoke();
                 return;
             }
         }
 
         Debug.LogWarning("player delivery the wrong recipe!");
+    }
+
+    public List<RecipeSo> GetWaitingRecipeSos() {
+        return waitingRecipeSos;
     }
 }
