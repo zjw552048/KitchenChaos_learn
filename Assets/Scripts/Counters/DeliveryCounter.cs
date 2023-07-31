@@ -5,10 +5,11 @@ public class DeliveryCounter : BaseCounter {
         }
 
         var playerHoldKitchenObject = player.GetKitchenObject();
-        if (!playerHoldKitchenObject.TryGetPlate(out _)) {
+        if (!playerHoldKitchenObject.TryGetPlate(out var plateKitchenObject)) {
             return;
         }
 
+        DeliveryManager.Instance.DeliveryRecipe(plateKitchenObject);
         playerHoldKitchenObject.DestroySelf();
     }
 
