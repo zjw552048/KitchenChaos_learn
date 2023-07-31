@@ -41,6 +41,16 @@ public class KitchenObject : MonoBehaviour {
         return burningSeconds;
     }
 
+    public bool TryGetPlate(out PlateKitchenObject plateKitchenObject) {
+        if (this is PlateKitchenObject) {
+            plateKitchenObject = this as PlateKitchenObject;
+            return true;
+        } else {
+            plateKitchenObject = null;
+            return false;
+        }
+    }
+
     public void SetKitchenObjectParent(IKitchenObjectParent targetParent) {
         if (targetParent.HasKitchenObject()) {
             Debug.LogError("targetParent already has a kitchenObject!");
