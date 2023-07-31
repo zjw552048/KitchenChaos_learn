@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -5,6 +6,8 @@ using UnityEngine;
 public class PlateKitchenObject : KitchenObject {
     [SerializeField] private KitchenObjectSo[] validKitchenObjectSos;
     private List<KitchenObjectSo> kitchenObjectSos;
+
+    public event Action<KitchenObjectSo> AddIngredientAction;
 
     private void Awake() {
         kitchenObjectSos = new List<KitchenObjectSo>();
@@ -20,6 +23,7 @@ public class PlateKitchenObject : KitchenObject {
         }
 
         kitchenObjectSos.Add(kitchenObjectSo);
+        AddIngredientAction?.Invoke(kitchenObjectSo);
         return true;
     }
 }
