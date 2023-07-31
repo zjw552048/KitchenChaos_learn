@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu()]
+[CreateAssetMenu(menuName = "GameSo/KitchenObjectSo")]
 public class KitchenObjectSo : ScriptableObject {
     public string objectName;
     public Sprite icon;
