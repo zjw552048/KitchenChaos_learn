@@ -2,25 +2,25 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CuttingProgressBarUI : MonoBehaviour {
-    [SerializeField] private GameObject uiParent;
+public class ProgressBarUI : MonoBehaviour {
     [SerializeField] private Image cuttingProgressBarImage;
+    [SerializeField] private GameObject hasProgressGameObject;
 
-    private CuttingCounter counter;
+    private IHasProgress hasProgress;
 
     private void Awake() {
-        counter = GetComponent<CuttingCounter>();
+        hasProgress = hasProgressGameObject.GetComponent<IHasProgress>();
     }
 
     private void Start() {
-        counter.RefreshCuttingProgressAction += OnRefreshCuttingProgressAction;
+        hasProgress.RefreshProgressAction += OnRefreshProgressAction;
 
         cuttingProgressBarImage.fillAmount = 0f;
 
         Hide();
     }
 
-    private void OnRefreshCuttingProgressAction(float progress) {
+    private void OnRefreshProgressAction(float progress) {
         cuttingProgressBarImage.fillAmount = progress;
         if (progress == 0.0f || Math.Abs(progress - 1.0f) < float.Epsilon) {
             Hide();
@@ -30,10 +30,10 @@ public class CuttingProgressBarUI : MonoBehaviour {
     }
 
     private void Show() {
-        uiParent.SetActive(true);
+        gameObject.SetActive(true);
     }
 
     private void Hide() {
-        uiParent.SetActive(false);
+        gameObject.SetActive(false);
     }
 }

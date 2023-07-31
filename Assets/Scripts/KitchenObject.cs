@@ -4,6 +4,8 @@ public class KitchenObject : MonoBehaviour {
     private KitchenObjectSo kitchenObjectSo;
     private IKitchenObjectParent kitchenObjectParent;
     private int currentCutCount;
+    private float fryingSeconds;
+    private float burningSeconds;
 
     private void SetKitchenObjectSo(KitchenObjectSo targetKitchenObjectSo) {
         kitchenObjectSo = targetKitchenObjectSo;
@@ -19,6 +21,24 @@ public class KitchenObject : MonoBehaviour {
 
     public int AddCurrentCutCount() {
         return ++currentCutCount;
+    }
+
+    public float GetCurrentFryingSeconds() {
+        return fryingSeconds;
+    }
+
+    public float AddCurrentFryingSeconds(float dt) {
+        fryingSeconds += dt;
+        return fryingSeconds;
+    }
+
+    public float GetCurrentBurningSeconds() {
+        return burningSeconds;
+    }
+
+    public float AddCurrentBurningSeconds(float dt) {
+        burningSeconds += dt;
+        return burningSeconds;
     }
 
     public void SetKitchenObjectParent(IKitchenObjectParent targetParent) {

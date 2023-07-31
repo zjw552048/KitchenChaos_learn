@@ -1,10 +1,10 @@
 using System;
 using UnityEngine;
 
-public class CuttingCounter : BaseCounter {
+public class CuttingCounter : BaseCounter, IHasProgress {
     [SerializeField] private CuttingRecipeSo[] cuttingRecipeSos;
 
-    public event Action<float> RefreshCuttingProgressAction;
+    public event Action<float> RefreshProgressAction;
     public event Action PlayerCutKitchenObjectAction;
 
 
@@ -17,7 +17,6 @@ public class CuttingCounter : BaseCounter {
                 var kitchenObject = player.GetKitchenObject();
                 var kitchenObjectSo = kitchenObject.GetKitchenObjectSo();
                 var cuttingRecipeSo = GetCuttingRecipeByInputSo(kitchenObjectSo);
-                Debug.Log("interact: "+cuttingRecipeSo);
                 if (cuttingRecipeSo == null) {
                     Debug.Log("KitchenObject can not be cut!");
                     return;
@@ -28,14 +27,14 @@ public class CuttingCounter : BaseCounter {
                 // 隐藏进度条
                 var cutCount = kitchenObject.GetCurrentCutCount();
                 var cutProgress = (float) cutCount / cuttingRecipeSo.needCutCount;
-                RefreshCuttingProgressAction?.Invoke(cutProgress);
+                RefreshProgressAction?.Invoke(cutProgress);
             }
         } else {
             if (HasKitchenObject()) {
                 // player未手持物体，counter被占用，拾取物体
                 GetKitchenObject().SetKitchenObjectParent(player);
                 // 隐藏进度条
-                RefreshCuttingProgressAction?.Invoke(0f);
+                RefreshProgressAction?.Invoke(0f);
             } else {
                 // player未手持物体，counter空闲，无逻辑
             }
@@ -56,7 +55,7 @@ public class CuttingCounter : BaseCounter {
 
         var curCount = kitchenObject.AddCurrentCutCount();
         var cutProgress = (float) curCount / cuttingRecipeSo.needCutCount;
-        RefreshCuttingProgressAction?.Invoke(cutProgress);
+        RefreshProgressAction?.Invoke(cutProgress);
         PlayerCutKitchenObjectAction?.Invoke();
 
         if (cutProgress < 1) {
