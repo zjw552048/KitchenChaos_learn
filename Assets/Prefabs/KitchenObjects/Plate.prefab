@@ -72,7 +72,7 @@ MonoBehaviour:
     gameObject: {fileID: 8572655157489345839}
   - KitchenObjectSo: {fileID: 11400000, guid: d696f457a4ba8594b8568bf5afd59b4e, type: 2}
     gameObject: {fileID: 8572655157244358113}
-  - KitchenObjectSo: {fileID: 11400000, guid: 43c82852a6c36ab47940000aba1448a3, type: 2}
+  - KitchenObjectSo: {fileID: 11400000, guid: 7541a53eabe230149b69a05437369284, type: 2}
     gameObject: {fileID: 8572655158010271287}
   - KitchenObjectSo: {fileID: 11400000, guid: aff33d9865935f5409cf4694bcfcb335, type: 2}
     gameObject: {fileID: 8572655158188151267}
