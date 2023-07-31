@@ -6,7 +6,7 @@ public class StoveCounter : BaseCounter, IHasProgress {
     [SerializeField] private BurningRecipeSo[] burningRecipeSos;
 
     public event Action<float> RefreshProgressAction;
-    public event Action<StoveState> StoveStateChanged;
+    public event Action<StoveState> StoveStateChangedAction;
 
     public enum StoveState {
         Idle,
@@ -44,7 +44,7 @@ public class StoveCounter : BaseCounter, IHasProgress {
                         stoveState = StoveState.Burning;
                     }
 
-                    StoveStateChanged?.Invoke(stoveState);
+                    StoveStateChangedAction?.Invoke(stoveState);
                 }
 
                 break;
@@ -61,7 +61,7 @@ public class StoveCounter : BaseCounter, IHasProgress {
                     KitchenObject.SpawnKitchenObject(burningRecipeSo.output, this);
 
                     stoveState = StoveState.Burned;
-                    StoveStateChanged?.Invoke(stoveState);
+                    StoveStateChangedAction?.Invoke(stoveState);
                     RefreshProgressAction?.Invoke(0f);
                 }
 
@@ -94,7 +94,7 @@ public class StoveCounter : BaseCounter, IHasProgress {
                 kitchenObject.SetKitchenObjectParent(this);
 
                 stoveState = StoveState.Frying;
-                StoveStateChanged?.Invoke(stoveState);
+                StoveStateChangedAction?.Invoke(stoveState);
             }
         } else {
             if (HasKitchenObject()) {
@@ -102,7 +102,7 @@ public class StoveCounter : BaseCounter, IHasProgress {
                 GetKitchenObject().SetKitchenObjectParent(player);
 
                 stoveState = StoveState.Idle;
-                StoveStateChanged?.Invoke(stoveState);
+                StoveStateChangedAction?.Invoke(stoveState);
                 RefreshProgressAction?.Invoke(0f);
             } else {
                 // player未手持物体，counter空闲，无逻辑

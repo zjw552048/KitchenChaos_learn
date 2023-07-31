@@ -11,10 +11,10 @@ public class StoveCounterVisual : MonoBehaviour {
     }
 
     private void Start() {
-        stoveCounter.StoveStateChanged += OnStoveStateChanged;
+        stoveCounter.StoveStateChangedAction += OnStoveStateChangedAction;
     }
 
-    private void OnStoveStateChanged(StoveCounter.StoveState stoveState) {
+    private void OnStoveStateChangedAction(StoveCounter.StoveState stoveState) {
         var needShowEffect = stoveState is StoveCounter.StoveState.Frying or StoveCounter.StoveState.Burning;
         particlesGameObject.SetActive(needShowEffect);
         stoveOnGameObjects.SetActive(needShowEffect);
