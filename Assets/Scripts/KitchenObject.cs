@@ -13,20 +13,12 @@ public class KitchenObject : MonoBehaviour {
         return kitchenObjectSo;
     }
 
-    public float GetCurrentCutProgress() {
-        if (kitchenObjectSo.needCutCount == 0) {
-            return 0f;
-        }
-        return (float) currentCutCount / kitchenObjectSo.needCutCount;
+    public int GetCurrentCutCount() {
+        return currentCutCount;
     }
 
-    public float AddCutCountAndReturnProgress() {
-        if (kitchenObjectSo.needCutCount == 0) {
-            return 0f;
-        }
-
-        currentCutCount++;
-        return (float) currentCutCount / kitchenObjectSo.needCutCount;
+    public int AddCurrentCutCount() {
+        return ++currentCutCount;
     }
 
     public void SetKitchenObjectParent(IKitchenObjectParent targetParent) {

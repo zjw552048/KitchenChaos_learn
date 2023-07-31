@@ -15,5 +15,3 @@ MonoBehaviour:
   objectName: Cabbage
   icon: {fileID: 21300000, guid: e1c23b5aded59d84da30738d3267a6c9, type: 3}
   prefab: {fileID: 2495333537243246918, guid: 9b984db4ff52d7d44b4d1e4368350d54, type: 3}
-  cutOutputSo: {fileID: 11400000, guid: 5dc96513a4cd52d4aa299ed78f3b18ab, type: 2}
-  needCutCount: 3

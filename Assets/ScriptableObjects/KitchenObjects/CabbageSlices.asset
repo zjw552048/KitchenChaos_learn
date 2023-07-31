@@ -15,5 +15,3 @@ MonoBehaviour:
   objectName: Cabbage Slices
   icon: {fileID: 21300000, guid: bee24f07c57157e45a946eed3bfe8b84, type: 3}
   prefab: {fileID: 2495333537243246918, guid: 2e6fefde3a8faaf4bb2a70c4ce4d56eb, type: 3}
-  cutOutputSo: {fileID: 0}
-  needCutCount: 0

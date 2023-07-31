@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 954f4b2beebf4674b8253109ef68aee7, type: 3}
-  m_Name: Bread
+  m_Script: {fileID: 11500000, guid: b38bfd2eaffcac44f89694c4b5f71c67, type: 3}
+  m_Name: CabbageToSlices
   m_EditorClassIdentifier: 
-  objectName: Bread
-  icon: {fileID: 21300000, guid: 77b28124b8bda494381c80bd5aa42c22, type: 3}
-  prefab: {fileID: 2495333537243246918, guid: 1f7851cf8f6e335438a108625edc3e61, type: 3}
+  input: {fileID: 11400000, guid: 8276206710f39624aa2e58ba14786a87, type: 2}
+  output: {fileID: 11400000, guid: 5dc96513a4cd52d4aa299ed78f3b18ab, type: 2}
+  needCutCount: 3
