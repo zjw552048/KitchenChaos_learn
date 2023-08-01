@@ -172,7 +172,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
     public void SetKitChenObject(KitchenObject targetObject) {
         holdKitchenObject = targetObject;
         if (targetObject != null) {
-            SoundManager.Instance.playKitchenObjectPickUp(transform.position);
+            SoundManager.Instance.PlayKitchenObjectPickUp(transform.position);
         }
     }
 

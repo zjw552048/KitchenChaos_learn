@@ -6,51 +6,76 @@ public class SoundManager : MonoBehaviour {
 
     [SerializeField] private AudioClipsRefsSo audioClipsRefsSo;
 
+    private float volumeScaler;
+    private const float MODIFY_VOLUME_STEP = 0.1f;
+    private const float MAX_VOLUME = 1.0f;
+
     private void Awake() {
         Instance = this;
+
+        volumeScaler = 0.5f;
     }
 
-    public void playChopSounds(Vector3 pos, float volume = 1f) {
-        playSound(audioClipsRefsSo.chop, pos, volume);
+    public float GetVolume() {
+        return volumeScaler;
     }
 
-    public void playDeliveryFail(Vector3 pos, float volume = 1f) {
-        playSound(audioClipsRefsSo.deliveryFail, pos, volume);
+    public void ModifyVolume() {
+        volumeScaler += MODIFY_VOLUME_STEP;
+        if (volumeScaler > MAX_VOLUME) {
+            volumeScaler = 0f;
+        }
     }
 
-    public void playDeliverySuccess(Vector3 pos, float volume = 1f) {
-        playSound(audioClipsRefsSo.deliverySuccess, pos, volume);
+    #region playSound logic
+
+    public void PlayChopSounds(Vector3 pos, float volume = 1f) {
+        PlaySound(audioClipsRefsSo.chop, pos, volume);
     }
 
-    public void playFootstep(Vector3 pos, float volume = 1f) {
-        playSound(audioClipsRefsSo.footStep, pos, volume);
+    public void PlayDeliveryFail(Vector3 pos, float volume = 1f) {
+        PlaySound(audioClipsRefsSo.deliveryFail, pos, volume);
     }
 
-    public void playKitchenObjectDrop(Vector3 pos, float volume = 1f) {
-        playSound(audioClipsRefsSo.kitchenObjectDrop, pos, volume);
+    public void PlayDeliverySuccess(Vector3 pos, float volume = 1f) {
+        PlaySound(audioClipsRefsSo.deliverySuccess, pos, volume);
     }
 
-    public void playKitchenObjectPickUp(Vector3 pos, float volume = 1f) {
-        playSound(audioClipsRefsSo.kitchenObjectPickUp, pos, volume);
+    public void PlayFootstep(Vector3 pos, float volume = 1f) {
+        PlaySound(audioClipsRefsSo.footStep, pos, volume);
     }
+
+    public void PlayKitchenObjectDrop(Vector3 pos, float volume = 1f) {
+        PlaySound(audioClipsRefsSo.kitchenObjectDrop, pos, volume);
+    }
+
+    public void PlayKitchenObjectPickUp(Vector3 pos, float volume = 1f) {
+        PlaySound(audioClipsRefsSo.kitchenObjectPickUp, pos, volume);
+    }
+
+    public void PlayTrash(Vector3 pos, float volume = 1f) {
+        PlaySound(audioClipsRefsSo.trash, pos, volume);
+    }
+
+    public void PlayWarning(Vector3 pos, float volume = 1f) {
+        PlaySound(audioClipsRefsSo.warning, pos, volume);
+    }
+
+    private void PlaySound(IReadOnlyList<AudioClip> audioClips, Vector3 pos, float volume) {
+        PlaySound(audioClips[Random.Range(0, audioClips.Count)], pos, volume);
+    }
+
+    private void PlaySound(AudioClip audioClip, Vector3 pos, float volume) {
+        AudioSource.PlayClipAtPoint(audioClip, pos, volume * volumeScaler);
+    }
+
+    #endregion
+
+    #region getAudioClip logic
 
     public AudioClip GetStoveSizzleClip() {
         return audioClipsRefsSo.stoveSizzle;
     }
 
-    public void playTrash(Vector3 pos, float volume = 1f) {
-        playSound(audioClipsRefsSo.trash, pos, volume);
-    }
-
-    public void playWarning(Vector3 pos, float volume = 1f) {
-        playSound(audioClipsRefsSo.warning, pos, volume);
-    }
-
-    private void playSound(IReadOnlyList<AudioClip> audioClips, Vector3 pos, float volume) {
-        AudioSource.PlayClipAtPoint(audioClips[Random.Range(0, audioClips.Count)], pos, volume);
-    }
-
-    private void playSound(AudioClip audioClip, Vector3 pos, float volume) {
-        AudioSource.PlayClipAtPoint(audioClip, pos, volume);
-    }
+    #endregion
 }

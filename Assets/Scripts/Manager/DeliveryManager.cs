@@ -74,13 +74,13 @@ public class DeliveryManager : MonoBehaviour {
                 recipeSuccessfulCount++;
                 waitingRecipeSos.RemoveAt(i);
                 CompleteRecipeAction?.Invoke();
-                SoundManager.Instance.playDeliverySuccess(plateKitchenObject.transform.position);
+                SoundManager.Instance.PlayDeliverySuccess(plateKitchenObject.transform.position);
                 return;
             }
         }
 
         Debug.LogWarning("player delivery the wrong recipe!");
-        SoundManager.Instance.playDeliveryFail(plateKitchenObject.transform.position);
+        SoundManager.Instance.PlayDeliveryFail(plateKitchenObject.transform.position);
     }
 
     public List<RecipeSo> GetWaitingRecipeSos() {

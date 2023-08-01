@@ -17,6 +17,6 @@ public class PlayerSounds : MonoBehaviour {
             return;
         }
 
-        SoundManager.Instance.playFootstep(transform.position);
+        SoundManager.Instance.PlayFootstep(transform.position);
     }
 }

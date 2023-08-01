@@ -5,7 +5,7 @@ public class TrashCounter : BaseCounter {
         }
 
         player.GetKitchenObject().DestroySelf();
-        SoundManager.Instance.playTrash(transform.position);
+        SoundManager.Instance.PlayTrash(transform.position);
     }
 
     public override void InteractAlternate(Player player) {
