@@ -8,12 +8,12 @@ public class MusicManager : MonoBehaviour {
     private float volume;
     private const float MODIFY_VOLUME_STEP = 0.1f;
     private const float MAX_VOLUME = 1.0f;
-    private const string MUSIC_VOLUME = "MusicVolume";
+    private const string MUSIC_VOLUME_KEY = "MusicVolume";
 
     private void Awake() {
         Instance = this;
 
-        volume = PlayerPrefs.GetFloat(MUSIC_VOLUME, MAX_VOLUME / 2);
+        volume = PlayerPrefs.GetFloat(MUSIC_VOLUME_KEY, MAX_VOLUME / 2);
         audioSource = GetComponent<AudioSource>();
         audioSource.volume = volume;
     }
@@ -29,7 +29,7 @@ public class MusicManager : MonoBehaviour {
         }
 
         audioSource.volume = volume;
-        PlayerPrefs.SetFloat(MUSIC_VOLUME, volume);
+        PlayerPrefs.SetFloat(MUSIC_VOLUME_KEY, volume);
         PlayerPrefs.Save();
     }
 }

@@ -9,6 +9,23 @@ public class GameOptionsUI : MonoBehaviour {
     [SerializeField] private TextMeshProUGUI soundVolumeText;
     [SerializeField] private TextMeshProUGUI musicVolumeText;
 
+    [SerializeField] private Button moveUpBtn;
+    [SerializeField] private Button moveDownBtn;
+    [SerializeField] private Button moveLeftBtn;
+    [SerializeField] private Button moveRightBtn;
+    [SerializeField] private Button interactBtn;
+    [SerializeField] private Button interactAlternateBtn;
+    [SerializeField] private Button pauseBtn;
+    [SerializeField] private TextMeshProUGUI moveUpBtnText;
+    [SerializeField] private TextMeshProUGUI moveDownBtnText;
+    [SerializeField] private TextMeshProUGUI moveLeftBtnText;
+    [SerializeField] private TextMeshProUGUI moveRightBtnText;
+    [SerializeField] private TextMeshProUGUI interactBtnText;
+    [SerializeField] private TextMeshProUGUI interactAlternateBtnText;
+    [SerializeField] private TextMeshProUGUI pauseBtnText;
+
+    [SerializeField] private GameObject rebindInputKeyTipsGameObject;
+
     private void Start() {
         soundVolumeBtn.onClick.AddListener(() => {
             SoundManager.Instance.ModifyVolume();
@@ -20,10 +37,19 @@ public class GameOptionsUI : MonoBehaviour {
         });
         closeOptionsBtn.onClick.AddListener(Hide);
 
+        moveUpBtn.onClick.AddListener(() => { ClickRebindKey(PlayerInput.InputKey.MoveUp); });
+        moveDownBtn.onClick.AddListener(() => { ClickRebindKey(PlayerInput.InputKey.MoveDown); });
+        moveLeftBtn.onClick.AddListener(() => { ClickRebindKey(PlayerInput.InputKey.MoveLeft); });
+        moveRightBtn.onClick.AddListener(() => { ClickRebindKey(PlayerInput.InputKey.MoveRight); });
+        interactBtn.onClick.AddListener(() => { ClickRebindKey(PlayerInput.InputKey.Interact); });
+        interactAlternateBtn.onClick.AddListener(() => { ClickRebindKey(PlayerInput.InputKey.InteractAlternate); });
+        pauseBtn.onClick.AddListener(() => { ClickRebindKey(PlayerInput.InputKey.Pause); });
+
         MainGameManager.Instance.OnGameUnpausedAction += OnGameUnpausedAction;
 
         UpdateVisual();
         Hide();
+        HideRebindTips();
     }
 
     private void OnGameUnpausedAction() {
@@ -33,6 +59,15 @@ public class GameOptionsUI : MonoBehaviour {
     private void UpdateVisual() {
         soundVolumeText.text = "Sound Volume: " + Mathf.RoundToInt(SoundManager.Instance.GetVolume() * 10);
         musicVolumeText.text = "Music Volume: " + Mathf.RoundToInt(MusicManager.Instance.GetVolume() * 10);
+
+        moveUpBtnText.text = PlayerInput.Instance.GetBindingInputKeyText(PlayerInput.InputKey.MoveUp);
+        moveDownBtnText.text = PlayerInput.Instance.GetBindingInputKeyText(PlayerInput.InputKey.MoveDown);
+        moveLeftBtnText.text = PlayerInput.Instance.GetBindingInputKeyText(PlayerInput.InputKey.MoveLeft);
+        moveRightBtnText.text = PlayerInput.Instance.GetBindingInputKeyText(PlayerInput.InputKey.MoveRight);
+        interactBtnText.text = PlayerInput.Instance.GetBindingInputKeyText(PlayerInput.InputKey.Interact);
+        interactAlternateBtnText.text =
+            PlayerInput.Instance.GetBindingInputKeyText(PlayerInput.InputKey.InteractAlternate);
+        pauseBtnText.text = PlayerInput.Instance.GetBindingInputKeyText(PlayerInput.InputKey.Pause);
     }
 
     public void Show() {
@@ -41,5 +76,21 @@ public class GameOptionsUI : MonoBehaviour {
 
     private void Hide() {
         gameObject.SetActive(false);
+    }
+
+    private void ShowRebindTips() {
+        rebindInputKeyTipsGameObject.SetActive(true);
+    }
+
+    private void HideRebindTips() {
+        rebindInputKeyTipsGameObject.SetActive(false);
+    }
+
+    private void ClickRebindKey(PlayerInput.InputKey inputKey) {
+        ShowRebindTips();
+        PlayerInput.Instance.RebindInputKey(inputKey, () => {
+            UpdateVisual();
+            HideRebindTips();
+        });
     }
 }
