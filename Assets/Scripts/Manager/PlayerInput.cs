@@ -20,6 +20,9 @@ public class PlayerInput : MonoBehaviour {
         Interact,
         InteractAlternate,
         Pause,
+        GamepadInteract,
+        GamepadInteractAlternate,
+        GamepadPause,
     }
 
     public event Action InteractAction;
@@ -28,7 +31,7 @@ public class PlayerInput : MonoBehaviour {
 
     private void Awake() {
         Instance = this;
-        
+
         playerInputActions = new PlayerInputActions();
         if (PlayerPrefs.HasKey(PLAYER_INPUT_KEY)) {
             playerInputActions.LoadBindingOverridesFromJson(PlayerPrefs.GetString(PLAYER_INPUT_KEY));
@@ -76,6 +79,10 @@ public class PlayerInput : MonoBehaviour {
             InputKey.Interact => playerInputActions.Player.Interact.bindings[0].ToDisplayString(),
             InputKey.InteractAlternate => playerInputActions.Player.InteractAlternate.bindings[0].ToDisplayString(),
             InputKey.Pause => playerInputActions.Player.Pause.bindings[0].ToDisplayString(),
+            InputKey.GamepadInteract => playerInputActions.Player.Interact.bindings[1].ToDisplayString(),
+            InputKey.GamepadInteractAlternate => playerInputActions.Player.InteractAlternate.bindings[1]
+                .ToDisplayString(),
+            InputKey.GamepadPause => playerInputActions.Player.Pause.bindings[1].ToDisplayString(),
             _ => throw new ArgumentOutOfRangeException(nameof(inputKey), inputKey, null)
         };
     }
@@ -117,6 +124,21 @@ public class PlayerInput : MonoBehaviour {
             case InputKey.Pause:
                 inputAction = playerInputActions.Player.Pause;
                 bindingIndex = 0;
+                break;
+            
+            case InputKey.GamepadInteract:
+                inputAction = playerInputActions.Player.Interact;
+                bindingIndex = 1;
+                break;
+
+            case InputKey.GamepadInteractAlternate:
+                inputAction = playerInputActions.Player.InteractAlternate;
+                bindingIndex = 1;
+                break;
+
+            case InputKey.GamepadPause:
+                inputAction = playerInputActions.Player.Pause;
+                bindingIndex = 1;
                 break;
 
             default:

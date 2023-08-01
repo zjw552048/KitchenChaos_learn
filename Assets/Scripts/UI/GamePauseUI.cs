@@ -8,7 +8,10 @@ public class GamePauseUI : MonoBehaviour {
     [SerializeField] private Button mainMenuBtn;
 
     private void Start() {
-        optionsBtn.onClick.AddListener(() => { gameOptionsUI.Show(); });
+        optionsBtn.onClick.AddListener(() => {
+            gameOptionsUI.Show();
+            Hide();
+        });
         resumeBtn.onClick.AddListener(() => { MainGameManager.Instance.TogglePauseGame(); });
         mainMenuBtn.onClick.AddListener(() => { SceneLoader.LoadScene(SceneLoader.SceneName.MainMenuScene); });
 
@@ -26,8 +29,10 @@ public class GamePauseUI : MonoBehaviour {
         Hide();
     }
 
-    private void Show() {
+    public void Show() {
         gameObject.SetActive(true);
+        
+        optionsBtn.Select();
     }
 
     private void Hide() {
