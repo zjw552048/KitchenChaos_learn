@@ -41,6 +41,10 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
     }
 
     private void PlayerInputOnInteractAction() {
+        if (!MainGameManager.Instance.IsGamePlayingState()) {
+            return;
+        }
+
         if (selectedCounter == null) {
             return;
         }
@@ -49,6 +53,10 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
     }
 
     private void PlayerInputOnInteractAlternateAction() {
+        if (!MainGameManager.Instance.IsGamePlayingState()) {
+            return;
+        }
+
         if (selectedCounter == null) {
             return;
         }
