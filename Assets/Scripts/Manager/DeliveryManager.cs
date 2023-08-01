@@ -91,7 +91,4 @@ public class DeliveryManager : MonoBehaviour {
         return recipeSuccessfulCount;
     }
 
-    public void ResetRecipeSuccessfulCount() {
-        recipeSuccessfulCount = 0;
-    }
 }

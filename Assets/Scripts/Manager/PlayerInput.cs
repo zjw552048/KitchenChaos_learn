@@ -12,6 +12,7 @@ public class PlayerInput : MonoBehaviour {
 
     public event Action InteractAction;
     public event Action InteractAlternateAction;
+    public event Action PauseAction;
 
     private void Awake() {
         playerInputActions = new PlayerInputActions();
@@ -19,16 +20,29 @@ public class PlayerInput : MonoBehaviour {
 
         playerInputActions.Player.Interact.performed += OnInteractPerformed;
         playerInputActions.Player.InteractAlternate.performed += OnInteractAlternatePerformed;
+        playerInputActions.Player.Pause.performed += OnPausePerformed;
 
         Instance = this;
+    }
+
+    private void OnDestroy() {
+        playerInputActions.Player.Interact.performed -= OnInteractPerformed;
+        playerInputActions.Player.InteractAlternate.performed -= OnInteractAlternatePerformed;
+        playerInputActions.Player.Pause.performed -= OnPausePerformed;
+        
+        playerInputActions.Dispose();
     }
 
     private void OnInteractPerformed(InputAction.CallbackContext obj) {
         InteractAction?.Invoke();
     }
-    
+
     private void OnInteractAlternatePerformed(InputAction.CallbackContext obj) {
         InteractAlternateAction?.Invoke();
+    }
+
+    private void OnPausePerformed(InputAction.CallbackContext obj) {
+        PauseAction?.Invoke();
     }
 
     public Vector2 GetMovementVector2Normalized() {
