@@ -16,6 +16,8 @@ public class DeliveryManager : MonoBehaviour {
     private const float SPAWN_RECIPE_INTERVAL = 4f;
     private const int MAX_WAITING_RECIPE_COUNT = 4;
 
+    private int recipeSuccessfulCount;
+
     private void Awake() {
         Instance = this;
         waitingRecipeSos = new List<RecipeSo>();
@@ -69,6 +71,7 @@ public class DeliveryManager : MonoBehaviour {
             if (matchRecipe) {
                 Debug.Log("player delivery the correct recipe, which index: " + i + ", recipeName: " +
                           waitingRecipeSos[i].recipeName);
+                recipeSuccessfulCount++;
                 waitingRecipeSos.RemoveAt(i);
                 CompleteRecipeAction?.Invoke();
                 SoundManager.Instance.playDeliverySuccess(plateKitchenObject.transform.position);
@@ -82,5 +85,13 @@ public class DeliveryManager : MonoBehaviour {
 
     public List<RecipeSo> GetWaitingRecipeSos() {
         return waitingRecipeSos;
+    }
+
+    public int GetRecipeSuccessfulCount() {
+        return recipeSuccessfulCount;
+    }
+
+    public void ResetRecipeSuccessfulCount() {
+        recipeSuccessfulCount = 0;
     }
 }

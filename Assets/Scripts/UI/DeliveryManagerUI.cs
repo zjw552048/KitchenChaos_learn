@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DeliveryManagerUI : MonoBehaviour {
@@ -10,8 +7,19 @@ public class DeliveryManagerUI : MonoBehaviour {
     private void Start() {
         recipeTemplate.gameObject.SetActive(false);
 
+        MainGameManager.Instance.OnGameStateChangedAction += OnGameStateChangedAction;
         DeliveryManager.Instance.SpawnRecipeAction += OnSpawnRecipeAction;
         DeliveryManager.Instance.CompleteRecipeAction += OnCompleteRecipeAction;
+
+        Hide();
+    }
+
+    private void OnGameStateChangedAction() {
+        if (MainGameManager.Instance.IsGamePlayingState()) {
+            Show();
+        } else {
+            Hide();
+        }
     }
 
     private void OnSpawnRecipeAction() {
@@ -37,5 +45,13 @@ public class DeliveryManagerUI : MonoBehaviour {
             waitingRecipeUI.SetWaitingRecipeSo(waitingRecipeSo);
             waitingRecipeUI.gameObject.SetActive(true);
         }
+    }
+
+    private void Show() {
+        gameObject.SetActive(true);
+    }
+
+    private void Hide() {
+        gameObject.SetActive(false);
     }
 }

@@ -16,7 +16,8 @@ public class MainGameManager : MonoBehaviour {
     private GameState gameState;
     private float waitToStartTimer = 1f;
     private float countDownToStartTimer = 3f;
-    private float gamePlayingTimer = 10f;
+    private float gamePlayingTimer;
+    private const float GAME_PLAYING_TOTAL_TIMER = 15f;
 
     private void Awake() {
         Instance = this;
@@ -32,6 +33,7 @@ public class MainGameManager : MonoBehaviour {
                 }
 
                 gameState = GameState.CountdownToStart;
+                DeliveryManager.Instance.ResetRecipeSuccessfulCount();
                 OnGameStateChangedAction?.Invoke();
 
                 break;
@@ -42,6 +44,7 @@ public class MainGameManager : MonoBehaviour {
                     return;
                 }
 
+                gamePlayingTimer = GAME_PLAYING_TOTAL_TIMER;
                 gameState = GameState.GamePlaying;
                 OnGameStateChangedAction?.Invoke();
                 break;
@@ -62,8 +65,6 @@ public class MainGameManager : MonoBehaviour {
             default:
                 throw new ArgumentOutOfRangeException();
         }
-
-        Debug.Log("GameState: " + gameState);
     }
 
     public int GetCountdownToStartTimer() {
@@ -76,5 +77,13 @@ public class MainGameManager : MonoBehaviour {
 
     public bool IsGamePlayingState() {
         return gameState == GameState.GamePlaying;
+    }
+
+    public bool IsGameOverState() {
+        return gameState == GameState.GameOver;
+    }
+
+    public float GetGamePlayingTimerNormalized() {
+        return gamePlayingTimer / GAME_PLAYING_TOTAL_TIMER;
     }
 }
