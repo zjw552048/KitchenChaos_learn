@@ -27,6 +27,8 @@ public class PlayerInput : MonoBehaviour {
     public event Action PauseAction;
 
     private void Awake() {
+        Instance = this;
+        
         playerInputActions = new PlayerInputActions();
         if (PlayerPrefs.HasKey(PLAYER_INPUT_KEY)) {
             playerInputActions.LoadBindingOverridesFromJson(PlayerPrefs.GetString(PLAYER_INPUT_KEY));
@@ -37,8 +39,6 @@ public class PlayerInput : MonoBehaviour {
         playerInputActions.Player.Interact.performed += OnInteractPerformed;
         playerInputActions.Player.InteractAlternate.performed += OnInteractAlternatePerformed;
         playerInputActions.Player.Pause.performed += OnPausePerformed;
-
-        Instance = this;
     }
 
     private void OnDestroy() {
