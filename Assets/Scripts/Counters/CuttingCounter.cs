@@ -65,6 +65,7 @@ public class CuttingCounter : BaseCounter, IHasProgress {
         var cutProgress = (float) curCount / cuttingRecipeSo.needCutCount;
         RefreshProgressAction?.Invoke(cutProgress);
         PlayerCutKitchenObjectAction?.Invoke();
+        SoundManager.Instance.playChopSounds(transform.position);
 
         if (cutProgress < 1) {
             return;

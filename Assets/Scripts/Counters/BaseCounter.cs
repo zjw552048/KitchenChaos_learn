@@ -20,6 +20,9 @@ public abstract class BaseCounter : MonoBehaviour, IKitchenObjectParent {
 
     public void SetKitChenObject(KitchenObject targetObject) {
         kitchenObject = targetObject;
+        if (targetObject != null) {
+            SoundManager.Instance.playKitchenObjectDrop(transform.position);
+        }
     }
 
     public bool HasKitchenObject() {
