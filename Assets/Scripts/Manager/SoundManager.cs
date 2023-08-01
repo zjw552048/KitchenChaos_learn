@@ -9,11 +9,12 @@ public class SoundManager : MonoBehaviour {
     private float volumeScaler;
     private const float MODIFY_VOLUME_STEP = 0.1f;
     private const float MAX_VOLUME = 1.0f;
+    private const string SOUND_VOLUME = "SoundVolume";
 
     private void Awake() {
         Instance = this;
 
-        volumeScaler = 0.5f;
+        volumeScaler = PlayerPrefs.GetFloat(SOUND_VOLUME, MAX_VOLUME / 2);
     }
 
     public float GetVolume() {
@@ -25,6 +26,8 @@ public class SoundManager : MonoBehaviour {
         if (volumeScaler > MAX_VOLUME) {
             volumeScaler = 0f;
         }
+
+        PlayerPrefs.SetFloat(SOUND_VOLUME, volumeScaler);
     }
 
     #region playSound logic
