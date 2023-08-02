@@ -12,6 +12,9 @@ public class DeliveryManager : MonoBehaviour {
     public event Action SpawnRecipeAction;
     public event Action CompleteRecipeAction;
 
+    public event Action DeliverySuccessAction;
+    public event Action DeliveryFailAction;
+
     private float spawnRecipeTimer;
     private const float SPAWN_RECIPE_INTERVAL = 4f;
     private const int MAX_WAITING_RECIPE_COUNT = 4;
@@ -78,12 +81,14 @@ public class DeliveryManager : MonoBehaviour {
                 recipeSuccessfulCount++;
                 waitingRecipeSos.RemoveAt(i);
                 CompleteRecipeAction?.Invoke();
+                DeliverySuccessAction?.Invoke();
                 SoundManager.Instance.PlayDeliverySuccess(plateKitchenObject.transform.position);
                 return;
             }
         }
 
         Debug.LogWarning("player delivery the wrong recipe!");
+        DeliveryFailAction?.Invoke();
         SoundManager.Instance.PlayDeliveryFail(plateKitchenObject.transform.position);
     }
 
