@@ -15,8 +15,8 @@ public class GamePauseUI : MonoBehaviour {
         resumeBtn.onClick.AddListener(() => { MainGameManager.Instance.TogglePauseGame(); });
         mainMenuBtn.onClick.AddListener(() => { SceneLoader.LoadScene(SceneLoader.SceneName.MainMenuScene); });
 
-        MainGameManager.Instance.OnGamePausedAction += OnGamePausedAction;
-        MainGameManager.Instance.OnGameUnpausedAction += OnGameUnpausedAction;
+        MainGameManager.Instance.GamePausedAction += OnGamePausedAction;
+        MainGameManager.Instance.GameUnpausedAction += OnGameUnpausedAction;
 
         Hide();
     }

@@ -7,7 +7,7 @@ public class DeliveryManagerUI : MonoBehaviour {
     private void Start() {
         recipeTemplate.gameObject.SetActive(false);
 
-        MainGameManager.Instance.OnGameStateChangedAction += OnGameStateChangedAction;
+        MainGameManager.Instance.GameStateChangedAction += OnGameStateChangedAction;
         DeliveryManager.Instance.SpawnRecipeAction += OnSpawnRecipeAction;
         DeliveryManager.Instance.CompleteRecipeAction += OnCompleteRecipeAction;
 

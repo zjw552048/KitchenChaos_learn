@@ -6,9 +6,9 @@ public class MainGameManager : MonoBehaviour {
 
     [SerializeField] private float gamePlayerTotalTime = 15f;
 
-    public event Action OnGameStateChangedAction;
-    public event Action OnGamePausedAction;
-    public event Action OnGameUnpausedAction;
+    public event Action GameStateChangedAction;
+    public event Action GamePausedAction;
+    public event Action GameUnpausedAction;
 
     private enum GameState {
         WaitToStart,
@@ -18,7 +18,6 @@ public class MainGameManager : MonoBehaviour {
     }
 
     private GameState gameState;
-    private float waitToStartTimer = 1f;
     private float countDownToStartTimer = 3f;
     private float gamePlayingTimer;
 
@@ -31,6 +30,16 @@ public class MainGameManager : MonoBehaviour {
 
     private void Start() {
         PlayerInput.Instance.PauseAction += OnPauseAction;
+        PlayerInput.Instance.InteractAction += OnInteractAction;
+    }
+
+    private void OnInteractAction() {
+        if (gameState != GameState.WaitToStart) {
+            return;
+        }
+
+        gameState = GameState.CountdownToStart;
+        GameStateChangedAction?.Invoke();
     }
 
     private void OnPauseAction() {
@@ -40,14 +49,6 @@ public class MainGameManager : MonoBehaviour {
     private void Update() {
         switch (gameState) {
             case GameState.WaitToStart:
-                waitToStartTimer -= Time.deltaTime;
-                if (waitToStartTimer > 0) {
-                    return;
-                }
-
-                gameState = GameState.CountdownToStart;
-                OnGameStateChangedAction?.Invoke();
-
                 break;
 
             case GameState.CountdownToStart:
@@ -58,7 +59,7 @@ public class MainGameManager : MonoBehaviour {
 
                 gamePlayingTimer = gamePlayerTotalTime;
                 gameState = GameState.GamePlaying;
-                OnGameStateChangedAction?.Invoke();
+                GameStateChangedAction?.Invoke();
                 break;
 
             case GameState.GamePlaying:
@@ -68,7 +69,7 @@ public class MainGameManager : MonoBehaviour {
                 }
 
                 gameState = GameState.GameOver;
-                OnGameStateChangedAction?.Invoke();
+                GameStateChangedAction?.Invoke();
                 break;
 
             case GameState.GameOver:
@@ -103,10 +104,10 @@ public class MainGameManager : MonoBehaviour {
         gamePaused = !gamePaused;
         if (gamePaused) {
             Time.timeScale = 0f;
-            OnGamePausedAction?.Invoke();
+            GamePausedAction?.Invoke();
         } else {
             Time.timeScale = 1f;
-            OnGameUnpausedAction?.Invoke();
+            GameUnpausedAction?.Invoke();
         }
     }
 }

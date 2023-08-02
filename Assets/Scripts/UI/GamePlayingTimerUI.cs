@@ -5,7 +5,7 @@ public class GamePlayingTimerUI : MonoBehaviour {
     [SerializeField] private Image timerImage;
 
     private void Start() {
-        MainGameManager.Instance.OnGameStateChangedAction += OnGameStateChangedAction;
+        MainGameManager.Instance.GameStateChangedAction += OnGameStateChangedAction;
         Hide();
     }
 

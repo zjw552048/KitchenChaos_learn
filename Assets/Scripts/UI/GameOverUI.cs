@@ -5,7 +5,7 @@ public class GameOverUI : MonoBehaviour {
     [SerializeField] private TextMeshProUGUI recipeDeliveredCountText;
 
     private void Start() {
-        MainGameManager.Instance.OnGameStateChangedAction += OnGameStateChangedAction;
+        MainGameManager.Instance.GameStateChangedAction += OnGameStateChangedAction;
 
         Hide();
     }

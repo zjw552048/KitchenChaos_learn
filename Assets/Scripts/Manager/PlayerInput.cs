@@ -28,6 +28,7 @@ public class PlayerInput : MonoBehaviour {
     public event Action InteractAction;
     public event Action InteractAlternateAction;
     public event Action PauseAction;
+    public event Action InputKeyRebindAction;
 
     private void Awake() {
         Instance = this;
@@ -87,7 +88,7 @@ public class PlayerInput : MonoBehaviour {
         };
     }
 
-    public void RebindInputKey(InputKey inputKey, Action rebindCall) {
+    public void RebindInputKey(InputKey inputKey) {
         InputAction inputAction;
         int bindingIndex;
         switch (inputKey) {
@@ -153,7 +154,7 @@ public class PlayerInput : MonoBehaviour {
                           ", new key: " + callback.action.bindings[bindingIndex].overridePath);
                 playerInputActions.Player.Enable();
                 callback.Dispose();
-                rebindCall?.Invoke();
+                InputKeyRebindAction?.Invoke();
 
                 PlayerPrefs.SetString(PLAYER_INPUT_KEY, playerInputActions.SaveBindingOverridesAsJson());
                 PlayerPrefs.Save();

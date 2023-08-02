@@ -5,7 +5,7 @@ public class CountdownToStartUI : MonoBehaviour {
     [SerializeField] private TextMeshProUGUI countdownText;
 
     private void Start() {
-        MainGameManager.Instance.OnGameStateChangedAction += OnGameStateChangedAction;
+        MainGameManager.Instance.GameStateChangedAction += OnGameStateChangedAction;
 
         Hide();
     }
