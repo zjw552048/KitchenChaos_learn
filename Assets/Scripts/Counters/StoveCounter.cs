@@ -5,6 +5,8 @@ public class StoveCounter : BaseCounter, IHasProgress {
     [SerializeField] private FryingRecipeSo[] fryingRecipeSos;
     [SerializeField] private BurningRecipeSo[] burningRecipeSos;
 
+    public const float BURNED_WARNING_PROGRESS = 0.3f;
+
     public event Action<float> RefreshProgressAction;
     public event Action<StoveState> StoveStateChangedAction;
 
@@ -23,7 +25,7 @@ public class StoveCounter : BaseCounter, IHasProgress {
         if (!MainGameManager.Instance.IsGamePlayingState()) {
             return;
         }
-        
+
         var kitchenObject = GetKitchenObject();
         switch (stoveState) {
             case StoveState.Idle:
@@ -149,5 +151,9 @@ public class StoveCounter : BaseCounter, IHasProgress {
         }
 
         return null;
+    }
+
+    public bool IsBurningState() {
+        return stoveState == StoveState.Burning;
     }
 }
