@@ -24,6 +24,10 @@ public class DeliveryManager : MonoBehaviour {
     }
 
     private void Update() {
+        if (!MainGameManager.Instance.IsGamePlayingState()) {
+            return;
+        }
+
         spawnRecipeTimer += Time.deltaTime;
         if (spawnRecipeTimer < SPAWN_RECIPE_INTERVAL) {
             return;

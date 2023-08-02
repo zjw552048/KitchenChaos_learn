@@ -20,6 +20,10 @@ public class StoveCounter : BaseCounter, IHasProgress {
     private BurningRecipeSo burningRecipeSo;
 
     private void Update() {
+        if (!MainGameManager.Instance.IsGamePlayingState()) {
+            return;
+        }
+        
         var kitchenObject = GetKitchenObject();
         switch (stoveState) {
             case StoveState.Idle:

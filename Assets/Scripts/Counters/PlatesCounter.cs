@@ -13,6 +13,10 @@ public class PlatesCounter : BaseCounter {
     public event Action RemovePlateAction;
 
     private void Update() {
+        if (!MainGameManager.Instance.IsGamePlayingState()) {
+            return;
+        }
+        
         if (currentPlateCount >= MAX_SPAWN_PLATE_COUNT) {
             return;
         }
