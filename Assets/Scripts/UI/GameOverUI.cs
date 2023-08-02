@@ -1,10 +1,14 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameOverUI : MonoBehaviour {
     [SerializeField] private TextMeshProUGUI recipeDeliveredCountText;
+    [SerializeField] private Button replayBtn;
 
     private void Start() {
+        replayBtn.onClick.AddListener(() => { SceneLoader.LoadScene(SceneLoader.SceneName.GameScene); });
+
         MainGameManager.Instance.GameStateChangedAction += OnGameStateChangedAction;
 
         Hide();
