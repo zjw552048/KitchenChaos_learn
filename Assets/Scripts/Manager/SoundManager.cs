@@ -60,15 +60,15 @@ public class SoundManager : MonoBehaviour {
         PlaySound(audioClipsRefsSo.trash, pos, volume);
     }
 
-    public void PlayWarning(Vector3 pos, float volume = 1f) {
-        PlaySound(audioClipsRefsSo.warning, pos, volume);
+    public void PlayWarning() {
+        PlaySound(audioClipsRefsSo.warning, Vector3.zero);
     }
 
-    private void PlaySound(IReadOnlyList<AudioClip> audioClips, Vector3 pos, float volume) {
+    private void PlaySound(IReadOnlyList<AudioClip> audioClips, Vector3 pos, float volume = 1f) {
         PlaySound(audioClips[Random.Range(0, audioClips.Count)], pos, volume);
     }
 
-    private void PlaySound(AudioClip audioClip, Vector3 pos, float volume) {
+    private void PlaySound(AudioClip audioClip, Vector3 pos, float volume = 1f) {
         AudioSource.PlayClipAtPoint(audioClip, pos, volume * volumeScaler);
     }
 
