@@ -37,7 +37,7 @@ public class CountdownToStartUI : MonoBehaviour {
         recordCountdownNumber = countdownNumber;
         countdownText.text = countdownNumber.ToString();
         animator.SetTrigger(NUMBER_POP_UP);
-        SoundManager.Instance.PlayWarning();
+        SoundManager.Instance.PlayCountdown();
     }
 
     private void Show() {

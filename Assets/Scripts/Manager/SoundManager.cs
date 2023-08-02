@@ -60,8 +60,12 @@ public class SoundManager : MonoBehaviour {
         PlaySound(audioClipsRefsSo.trash, pos, volume);
     }
 
-    public void PlayWarning() {
-        PlaySound(audioClipsRefsSo.warning, Vector3.zero);
+    public void PlayCountdown(float volume = 1f) {
+        PlaySound(audioClipsRefsSo.countdown, new Vector3(), volume);
+    }
+
+    public void PlayWarning(Vector3 pos, float volume = 1f) {
+        PlaySound(audioClipsRefsSo.warning, pos, volume);
     }
 
     private void PlaySound(IReadOnlyList<AudioClip> audioClips, Vector3 pos, float volume = 1f) {

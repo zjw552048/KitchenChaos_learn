@@ -10,5 +10,6 @@ public class AudioClipsRefsSo : ScriptableObject {
     public AudioClip[] kitchenObjectPickUp;
     public AudioClip stoveSizzle;
     public AudioClip[] trash;
+    public AudioClip[] countdown;
     public AudioClip[] warning;
 }
