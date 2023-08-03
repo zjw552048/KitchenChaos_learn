@@ -1,6 +1,7 @@
+using Unity.Netcode;
 using UnityEngine;
 
-public abstract class BaseCounter : MonoBehaviour, IKitchenObjectParent {
+public abstract class BaseCounter : NetworkBehaviour, IKitchenObjectParent {
     [SerializeField] private Transform counterTopPoint;
 
     private KitchenObject kitchenObject;
@@ -18,7 +19,7 @@ public abstract class BaseCounter : MonoBehaviour, IKitchenObjectParent {
         return kitchenObject;
     }
 
-    public void SetKitChenObject(KitchenObject targetObject) {
+    public void SetKitchenObject(KitchenObject targetObject) {
         kitchenObject = targetObject;
         if (targetObject != null) {
             SoundManager.Instance.PlayKitchenObjectDrop(transform.position);
@@ -27,6 +28,10 @@ public abstract class BaseCounter : MonoBehaviour, IKitchenObjectParent {
 
     public bool HasKitchenObject() {
         return kitchenObject != null;
+    }
+
+    public NetworkObject GetNetworkObject() {
+        return NetworkObject;
     }
 
     #endregion

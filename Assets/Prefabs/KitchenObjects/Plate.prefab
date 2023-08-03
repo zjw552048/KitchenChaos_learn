@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 2495333537243246918}
   - component: {fileID: 3135430981526037917}
   - component: {fileID: 3461273000011354964}
+  - component: {fileID: 1809637885078893365}
+  - component: {fileID: -6128276811570885487}
   m_Layer: 0
   m_Name: Plate
   m_TagString: Untagged
@@ -48,6 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2993a010c9c7aa47b48d4418863fab3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  kitchenObjectSo: {fileID: 11400000, guid: 92af8734624998848b7787807b66a3f6, type: 2}
   validKitchenObjectSos:
   - {fileID: 11400000, guid: b825d4c4dcfd57a4ba221b14de74ee34, type: 2}
   - {fileID: 11400000, guid: 5dc96513a4cd52d4aa299ed78f3b18ab, type: 2}
@@ -80,6 +83,34 @@ MonoBehaviour:
     gameObject: {fileID: 8572655157223095213}
   - KitchenObjectSo: {fileID: 11400000, guid: b1846285e51073749a82f5a5d60eeee3, type: 2}
     gameObject: {fileID: 8476695685764436925}
+--- !u!114 &1809637885078893365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1545509978312487550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+--- !u!114 &-6128276811570885487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1545509978312487550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 275a7aa07db07e04fbd0a40c824e856b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3658652526940905138
 GameObject:
   m_ObjectHideFlags: 0

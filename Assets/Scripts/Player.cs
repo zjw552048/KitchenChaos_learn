@@ -188,7 +188,7 @@ public class Player : NetworkBehaviour, IKitchenObjectParent {
         return holdKitchenObject;
     }
 
-    public void SetKitChenObject(KitchenObject targetObject) {
+    public void SetKitchenObject(KitchenObject targetObject) {
         holdKitchenObject = targetObject;
         if (targetObject != null) {
             SoundManager.Instance.PlayKitchenObjectPickUp(transform.position);
@@ -197,6 +197,10 @@ public class Player : NetworkBehaviour, IKitchenObjectParent {
 
     public bool HasKitchenObject() {
         return holdKitchenObject != null;
+    }
+
+    public NetworkObject GetNetworkObject() {
+        return NetworkObject;
     }
 
     #endregion

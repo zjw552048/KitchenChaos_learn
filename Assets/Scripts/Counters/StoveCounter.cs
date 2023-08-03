@@ -39,7 +39,8 @@ public class StoveCounter : BaseCounter, IHasProgress {
                     RefreshProgressAction?.Invoke(curProgress);
                 } else {
                     kitchenObject.DestroySelf();
-                    kitchenObject = KitchenObject.SpawnKitchenObject(fryingRecipeSo.output, this);
+                    KitchenObject.SpawnKitchenObject(fryingRecipeSo.output, this);
+                    kitchenObject = GetKitchenObject();
 
                     burningRecipeSo = GetBurningRecipeByInputSo(kitchenObject.GetKitchenObjectSo());
 

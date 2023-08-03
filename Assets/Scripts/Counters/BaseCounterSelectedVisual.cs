@@ -24,7 +24,9 @@ public class BaseCounterSelectedVisual : MonoBehaviour {
     }
 
     private void OnDestroy() {
-        Player.LocalInstance.SelectedCounterChangedAction -= OnSelectedCounterChangedAction;
+        if (Player.LocalInstance != null) {
+            Player.LocalInstance.SelectedCounterChangedAction -= OnSelectedCounterChangedAction;
+        }
     }
 
     private void OnSelectedCounterChangedAction(BaseCounter selectedCounter) {
