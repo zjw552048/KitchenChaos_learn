@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 1900839633771049215}
   - component: {fileID: 6682078469657250388}
   - component: {fileID: 4103653404992521917}
-  - component: {fileID: -1909101719775860524}
+  - component: {fileID: 5149820357524639531}
   m_Layer: 6
   m_Name: _BaseCounter
   m_TagString: Untagged
@@ -100,7 +100,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   counterSelectedVisual: {fileID: 0}
---- !u!114 &-1909101719775860524
+--- !u!114 &5149820357524639531
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
