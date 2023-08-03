@@ -70,69 +70,8 @@ public class Player : NetworkBehaviour, IKitchenObjectParent {
             return;
         }
 
-        // HandleMovement();
-        HandleMovementByServer();
+        HandleMovement();
         HandleInteract();
-    }
-
-    private void HandleMovementByServer() {
-        var inputVector = PlayerInput.Instance.GetMovementVector2Normalized();
-        var moveDir = new Vector3(inputVector.x, 0, inputVector.y);
-        HandleMovementServerRpc(moveDir);
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    private void HandleMovementServerRpc(Vector3 moveDir) {
-        isWalking = moveDir != Vector3.zero;
-        if (!isWalking) {
-            return;
-        }
-
-        // 更新角度
-        playTransform.forward = Vector3.Slerp(playTransform.forward, moveDir, rotateSpeed * Time.deltaTime);
-
-        // check move on x and y dir
-        var playerPos = playTransform.position;
-        var moveDistance = moveSpeed * Time.deltaTime;
-        var canMove = !Physics.CapsuleCast(
-            playerPos,
-            playerPos + Vector3.up * playerHeight,
-            playerRadius,
-            moveDir,
-            moveDistance);
-        if (!canMove) {
-            // try move on x dir
-            var moveDirX = new Vector3(moveDir.x, 0, 0);
-            canMove = moveDir.x != 0 &&
-                      !Physics.CapsuleCast(
-                          playerPos,
-                          playerPos + Vector3.up * playerHeight,
-                          playerRadius,
-                          moveDirX,
-                          moveDistance);
-            if (canMove) {
-                moveDir = moveDirX;
-            } else {
-                // try move on y dir
-                var moveDirZ = new Vector3(0, 0, moveDir.z);
-                canMove = moveDir.z != 0 &&
-                          !Physics.CapsuleCast(
-                              playerPos,
-                              playerPos + Vector3.up * playerHeight,
-                              playerRadius,
-                              moveDirZ,
-                              moveDistance);
-                if (canMove) {
-                    moveDir = moveDirZ;
-                } else {
-                    // totally can not move
-                }
-            }
-        }
-
-        if (canMove) {
-            playTransform.position += moveDir * moveDistance;
-        }
     }
 
     private void HandleMovement() {
