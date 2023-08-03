@@ -4,7 +4,7 @@ using UnityEngine;
 public class MainGameManager : MonoBehaviour {
     public static MainGameManager Instance { get; private set; }
 
-    [SerializeField] private float gamePlayerTotalTime = 15f;
+    private const float GAME_PLAYER_TOTAL_TIME = 600f;
 
     public event Action GameStateChangedAction;
     public event Action GamePausedAction;
@@ -31,6 +31,11 @@ public class MainGameManager : MonoBehaviour {
     private void Start() {
         PlayerInput.Instance.PauseAction += OnPauseAction;
         PlayerInput.Instance.InteractAction += OnInteractAction;
+
+        // FIXME:方便Netcode逻辑测试，直接进入倒计时状态
+        gameState = GameState.CountdownToStart;
+        GameStateChangedAction?.Invoke();
+        countDownToStartTimer = 1f;
     }
 
     private void OnInteractAction() {
@@ -57,7 +62,7 @@ public class MainGameManager : MonoBehaviour {
                     return;
                 }
 
-                gamePlayingTimer = gamePlayerTotalTime;
+                gamePlayingTimer = GAME_PLAYER_TOTAL_TIME;
                 gameState = GameState.GamePlaying;
                 GameStateChangedAction?.Invoke();
                 break;
@@ -97,7 +102,7 @@ public class MainGameManager : MonoBehaviour {
     }
 
     public float GetGamePlayingTimerNormalized() {
-        return gamePlayingTimer / gamePlayerTotalTime;
+        return gamePlayingTimer / GAME_PLAYER_TOTAL_TIME;
     }
 
     public void TogglePauseGame() {
