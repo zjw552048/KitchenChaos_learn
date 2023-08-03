@@ -81,12 +81,20 @@ public class KitchenObject : NetworkBehaviour {
     }
 
     public void DestroySelf() {
-        kitchenObjectParent.SetKitchenObject(null);
         Destroy(gameObject);
     }
 
+    public void ClearKitchenObjectForParent() {
+        kitchenObjectParent.SetKitchenObject(null);
+    }
+
     public static void SpawnKitchenObject(KitchenObjectSo kitchenObjectSo, IKitchenObjectParent kitchenObjectParent) {
-        // 多人模式下，预制生成对象必须在sever端进行，所以改为SeverRpc
+        // 多人模式下，Network必须在sever端进行生成，所以改为SeverRpc
         MultiplayerNetworkManager.Instance.SpawnKitchenObjectByServer(kitchenObjectSo, kitchenObjectParent);
+    }
+
+    public static void DespawnKitchenObject(KitchenObject kitchenObject) {
+        // 多人模式下，Network必须在sever端进行销毁，所以改为SeverRpc
+        MultiplayerNetworkManager.Instance.DespawnKitchenObjectByServer(kitchenObject);
     }
 }

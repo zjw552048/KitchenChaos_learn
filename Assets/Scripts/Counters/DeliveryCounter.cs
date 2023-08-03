@@ -10,7 +10,8 @@ public class DeliveryCounter : BaseCounter {
         }
 
         DeliveryManager.Instance.DeliveryRecipe(plateKitchenObject);
-        playerHoldKitchenObject.DestroySelf();
+        
+        KitchenObject.DespawnKitchenObject(playerHoldKitchenObject);
     }
 
     public override void InteractAlternate(Player player) {

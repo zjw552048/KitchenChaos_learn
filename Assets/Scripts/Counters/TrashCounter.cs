@@ -1,10 +1,23 @@
+using Unity.Netcode;
+
 public class TrashCounter : BaseCounter {
     public override void Interact(Player player) {
         if (!player.HasKitchenObject()) {
             return;
         }
 
-        player.GetKitchenObject().DestroySelf();
+        KitchenObject.DespawnKitchenObject(player.GetKitchenObject());
+
+        InteractLogicServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void InteractLogicServerRpc() {
+        InteractLogicClientRpc();
+    }
+
+    [ClientRpc]
+    private void InteractLogicClientRpc() {
         SoundManager.Instance.PlayTrash(transform.position);
     }
 

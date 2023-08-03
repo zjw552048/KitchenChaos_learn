@@ -58,16 +58,16 @@ public class PlatesCounter : BaseCounter {
 
         KitchenObject.SpawnKitchenObject(plateKitchenObjectSo, player);
 
-        PlayerTakePlateActionServerRpc();
+        InteractLogicServerRpc();
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void PlayerTakePlateActionServerRpc() {
-        PlayerTakePlateActionClientRpc();
+    private void InteractLogicServerRpc() {
+        InteractLogicClientRpc();
     }
 
     [ClientRpc]
-    private void PlayerTakePlateActionClientRpc() {
+    private void InteractLogicClientRpc() {
         currentPlateCount--;
         RemovePlateAction?.Invoke();
     }

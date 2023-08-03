@@ -19,16 +19,16 @@ public class ContainerCounter : BaseCounter {
 
         KitchenObject.SpawnKitchenObject(kitchenObjectSo, player);
 
-        PlayerHoldKitchenObjectActionServerRpc();
+        InteractLogicServerRpc();
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void PlayerHoldKitchenObjectActionServerRpc() {
-        PlayerHoldKitchenObjectActionClientRpc();
+    private void InteractLogicServerRpc() {
+        InteractLogicClientRpc();
     }
     
     [ClientRpc]
-    private void PlayerHoldKitchenObjectActionClientRpc() {
+    private void InteractLogicClientRpc() {
         PlayerHoldKitchenObjectAction?.Invoke();
     }
 
