@@ -1,8 +1,9 @@
 using System;
+using Unity.Netcode;
 using UnityEngine;
 
-public class Player : MonoBehaviour, IKitchenObjectParent {
     public static Player Instance { get; private set; }
+public class Player : NetworkBehaviour, IKitchenObjectParent {
 
     [Header("速度参数")] [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private float rotateSpeed = 10f;
@@ -35,7 +36,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
         PlayerInput.Instance.InteractAlternateAction += PlayerInputOnInteractAlternateAction;
     }
 
-    private void OnDestroy() {
+    public override void OnDestroy() {
         PlayerInput.Instance.InteractAction -= PlayerInputOnInteractAction;
         PlayerInput.Instance.InteractAlternateAction -= PlayerInputOnInteractAlternateAction;
     }
