@@ -1,4 +1,5 @@
 using System;
+using Unity.Netcode;
 using UnityEngine;
 
 public class PlatesCounter : BaseCounter {
@@ -13,10 +14,14 @@ public class PlatesCounter : BaseCounter {
     public event Action RemovePlateAction;
 
     private void Update() {
+        if (!IsServer) {
+            return;
+        }
+
         if (!MainGameManager.Instance.IsGamePlayingState()) {
             return;
         }
-        
+
         if (currentPlateCount >= MAX_SPAWN_PLATE_COUNT) {
             return;
         }
@@ -27,6 +32,17 @@ public class PlatesCounter : BaseCounter {
         }
 
         spawnPlateTimer -= SPAWN_PLATE_INTERVAL;
+
+        SpawnPlateServerRpc();
+    }
+
+    [ServerRpc]
+    private void SpawnPlateServerRpc() {
+        SpawnPlateClientRpc();
+    }
+
+    [ClientRpc]
+    private void SpawnPlateClientRpc() {
         currentPlateCount++;
         SpawnPlateAction?.Invoke();
     }
@@ -40,8 +56,19 @@ public class PlatesCounter : BaseCounter {
             return;
         }
 
-        currentPlateCount--;
         KitchenObject.SpawnKitchenObject(plateKitchenObjectSo, player);
+
+        PlayerTakePlateActionServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void PlayerTakePlateActionServerRpc() {
+        PlayerTakePlateActionClientRpc();
+    }
+
+    [ClientRpc]
+    private void PlayerTakePlateActionClientRpc() {
+        currentPlateCount--;
         RemovePlateAction?.Invoke();
     }
 
