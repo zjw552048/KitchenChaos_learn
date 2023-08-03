@@ -2,8 +2,8 @@ using System;
 using Unity.Netcode;
 using UnityEngine;
 
-    public static Player Instance { get; private set; }
 public class Player : NetworkBehaviour, IKitchenObjectParent {
+    // public static Player Instance { get; private set; }
 
     [Header("速度参数")] [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private float rotateSpeed = 10f;
@@ -27,7 +27,7 @@ public class Player : NetworkBehaviour, IKitchenObjectParent {
     public event Action<BaseCounter> SelectedCounterChangedAction;
 
     private void Awake() {
-        Instance = this;
+        // Instance = this;
         playTransform = transform;
     }
 

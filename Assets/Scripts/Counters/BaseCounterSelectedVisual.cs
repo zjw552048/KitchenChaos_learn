@@ -11,11 +11,11 @@ public class BaseCounterSelectedVisual : MonoBehaviour {
     }
 
     private void Start() {
-        Player.Instance.SelectedCounterChangedAction += OnSelectedCounterChangedAction;
+        // Player.Instance.SelectedCounterChangedAction += OnSelectedCounterChangedAction;
     }
 
     private void OnDestroy() {
-        Player.Instance.SelectedCounterChangedAction -= OnSelectedCounterChangedAction;
+        // Player.Instance.SelectedCounterChangedAction -= OnSelectedCounterChangedAction;
     }
 
     private void OnSelectedCounterChangedAction(BaseCounter selectedCounter) {
