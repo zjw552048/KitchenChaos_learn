@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class KitchenObject : NetworkBehaviour {
     [SerializeField] private KitchenObjectSo kitchenObjectSo;
-    
+
     private IKitchenObjectParent kitchenObjectParent;
     private int currentCutCount;
     private float fryingSeconds;
@@ -11,7 +11,7 @@ public class KitchenObject : NetworkBehaviour {
 
     private FollowTransform followTransform;
 
-    private void Awake() {
+    protected virtual void Awake() {
         followTransform = GetComponent<FollowTransform>();
     }
 

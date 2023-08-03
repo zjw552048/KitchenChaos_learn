@@ -10,7 +10,8 @@ public class PlateKitchenObject : KitchenObject {
 
     public event Action<KitchenObjectSo> AddIngredientAction;
 
-    private void Awake() {
+    protected  override  void Awake() {
+        base.Awake();
         kitchenObjectSos = new List<KitchenObjectSo>();
     }
 
