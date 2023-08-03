@@ -1,4 +1,5 @@
 using System;
+using Unity.Netcode;
 using UnityEngine;
 
 public class CuttingCounter : BaseCounter, IHasProgress {
@@ -32,22 +33,46 @@ public class CuttingCounter : BaseCounter, IHasProgress {
 
                 // 放下食材
                 kitchenObject.SetKitchenObjectParent(this);
-                // 隐藏进度条
-                var cutCount = kitchenObject.GetCurrentCutCount();
-                var cutProgress = (float) cutCount / cuttingRecipeSo.needCutCount;
-                RefreshProgressAction?.Invoke(cutProgress);
+                InteractLogicPlaceObjectOnCounterServerRpc();
             }
         } else {
             if (HasKitchenObject()) {
                 // player未手持物体，counter被占用，拾取物体
                 GetKitchenObject().SetKitchenObjectParent(player);
-                // 隐藏进度条
-                RefreshProgressAction?.Invoke(0f);
+                InteractLogicTakeObjectFromCounterServerRpc();
             } else {
                 // player未手持物体，counter空闲，无逻辑
             }
         }
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void InteractLogicPlaceObjectOnCounterServerRpc() {
+        InteractLogicPlaceObjectOnCounterClientRpc();
+    }
+
+    [ClientRpc]
+    private void InteractLogicPlaceObjectOnCounterClientRpc() {
+        var kitchenObject = GetKitchenObject();
+        var kitchenObjectSo = kitchenObject.GetKitchenObjectSo();
+        var cuttingRecipeSo = GetCuttingRecipeByInputSo(kitchenObjectSo);
+        // 隐藏进度条
+        var cutCount = kitchenObject.GetCurrentCutCount();
+        var cutProgress = (float) cutCount / cuttingRecipeSo.needCutCount;
+        RefreshProgressAction?.Invoke(cutProgress);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void InteractLogicTakeObjectFromCounterServerRpc() {
+        InteractLogicTakeObjectFromCounterClientRpc();
+    }
+
+    [ClientRpc]
+    private void InteractLogicTakeObjectFromCounterClientRpc() {
+        // 隐藏进度条
+        RefreshProgressAction?.Invoke(0f);
+    }
+
 
     public override void InteractAlternate(Player player) {
         if (!HasKitchenObject()) {
@@ -61,17 +86,42 @@ public class CuttingCounter : BaseCounter, IHasProgress {
             return;
         }
 
+        CutKitchenObjectServerRpc();
+        CheckCutDoneServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void CutKitchenObjectServerRpc() {
+        CutKitchenObjectClientRpc();
+    }
+
+    [ClientRpc]
+    private void CutKitchenObjectClientRpc() {
+        var kitchenObject = GetKitchenObject();
+        var kitchenObjectSo = kitchenObject.GetKitchenObjectSo();
+        var cuttingRecipeSo = GetCuttingRecipeByInputSo(kitchenObjectSo);
+
         var curCount = kitchenObject.AddCurrentCutCount();
         var cutProgress = (float) curCount / cuttingRecipeSo.needCutCount;
         RefreshProgressAction?.Invoke(cutProgress);
         PlayerCutKitchenObjectAction?.Invoke();
         SoundManager.Instance.PlayChopSounds(transform.position);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void CheckCutDoneServerRpc() {
+        var kitchenObject = GetKitchenObject();
+        var kitchenObjectSo = kitchenObject.GetKitchenObjectSo();
+        var cuttingRecipeSo = GetCuttingRecipeByInputSo(kitchenObjectSo);
+
+        var curCount = kitchenObject.GetCurrentCutCount();
+        var cutProgress = (float) curCount / cuttingRecipeSo.needCutCount;
 
         if (cutProgress < 1) {
             return;
         }
 
-        kitchenObject.DestroySelf();
+        KitchenObject.DespawnKitchenObject(kitchenObject);
         KitchenObject.SpawnKitchenObject(cuttingRecipeSo.output, this);
     }
 
