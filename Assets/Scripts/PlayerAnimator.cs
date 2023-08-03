@@ -17,13 +17,7 @@ public class PlayerAnimator : NetworkBehaviour {
             return;
         }
 
-        var isWalking = player.IsWalking();
-        UpdatePlayerAnimatorServerRpc(isWalking);
-        // animator.SetBool(IS_WALKING, player.IsWalking());
+        animator.SetBool(IS_WALKING, player.IsWalking());
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void UpdatePlayerAnimatorServerRpc(bool isWalking) {
-        animator.SetBool(IS_WALKING, isWalking);
-    }
 }
