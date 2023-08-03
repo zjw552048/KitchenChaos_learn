@@ -7748,7 +7748,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdee71e106c4ee84da88f79102229514, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gamePlayerTotalTime: 60
 --- !u!4 &1072098128
 Transform:
   m_ObjectHideFlags: 0
@@ -9885,7 +9884,7 @@ MonoBehaviour:
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 1329125191}
-    PlayerPrefab: {fileID: 1562688965830209141, guid: 7646db631361d6f4194ef663fbc24ef2,
+    PlayerPrefab: {fileID: 4425835796060795977, guid: 7646db631361d6f4194ef663fbc24ef2,
       type: 3}
     NetworkPrefabs: []
     TickRate: 30
