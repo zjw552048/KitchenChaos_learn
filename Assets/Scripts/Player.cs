@@ -3,7 +3,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 public class Player : NetworkBehaviour, IKitchenObjectParent {
-    // public static Player Instance { get; private set; }
+    public static Player LocalInstance { get; private set; }
 
     [Header("速度参数")] [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private float rotateSpeed = 10f;
@@ -25,10 +25,24 @@ public class Player : NetworkBehaviour, IKitchenObjectParent {
     private KitchenObject holdKitchenObject;
 
     public event Action<BaseCounter> SelectedCounterChangedAction;
+    public static event Action AnyPlayerSpawnedAction;
+
+    public static void ResetStaticData() {
+        AnyPlayerSpawnedAction = null;
+    }
 
     private void Awake() {
-        // Instance = this;
         playTransform = transform;
+    }
+
+    public override void OnNetworkSpawn() {
+        base.OnNetworkSpawn();
+        if (!IsOwner) {
+            return;
+        }
+
+        LocalInstance = this;
+        AnyPlayerSpawnedAction?.Invoke();
     }
 
     private void Start() {

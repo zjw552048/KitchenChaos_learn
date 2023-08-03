@@ -1,9 +1,8 @@
 using UnityEngine;
 
 public class BaseCounterSelectedVisual : MonoBehaviour {
+    [SerializeField] private GameObject counterSelectedVisual;
 
-    [SerializeField]private GameObject counterSelectedVisual;
-    
     private BaseCounter counter;
 
     private void Awake() {
@@ -11,11 +10,21 @@ public class BaseCounterSelectedVisual : MonoBehaviour {
     }
 
     private void Start() {
-        // Player.Instance.SelectedCounterChangedAction += OnSelectedCounterChangedAction;
+        if (Player.LocalInstance != null) {
+            Player.LocalInstance.SelectedCounterChangedAction += OnSelectedCounterChangedAction;
+        } else {
+            Player.AnyPlayerSpawnedAction += OnAnyPlayerSpawnedAction;
+        }
+    }
+
+    private void OnAnyPlayerSpawnedAction() {
+        if (Player.LocalInstance != null) {
+            Player.LocalInstance.SelectedCounterChangedAction += OnSelectedCounterChangedAction;
+        }
     }
 
     private void OnDestroy() {
-        // Player.Instance.SelectedCounterChangedAction -= OnSelectedCounterChangedAction;
+        Player.LocalInstance.SelectedCounterChangedAction -= OnSelectedCounterChangedAction;
     }
 
     private void OnSelectedCounterChangedAction(BaseCounter selectedCounter) {
