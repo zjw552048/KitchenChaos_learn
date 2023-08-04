@@ -10,8 +10,12 @@ public class MainGameManager : NetworkBehaviour {
 
     public event Action LocalPlayerReadyChangedAction;
     public event Action GameStateChangedAction;
-    public event Action GamePausedAction;
-    public event Action GameUnpausedAction;
+
+    public event Action LocalGamePausedAction;
+    public event Action LocalGameUnpausedAction;
+
+    public event Action MultiplayerGamePausedAction;
+    public event Action MultiplayerGameUnpausedAction;
 
     private enum GameState {
         WaitToStart,
@@ -24,22 +28,38 @@ public class MainGameManager : NetworkBehaviour {
     private readonly NetworkVariable<float> countDownToStartTimer = new NetworkVariable<float>(3f);
     private readonly NetworkVariable<float> gamePlayingTimer = new NetworkVariable<float>(GAME_PLAYER_TOTAL_TIME);
 
-    private bool gamePaused;
     private bool localPlayerReady;
     private Dictionary<ulong, bool> playersReadyDic;
+
+    private bool localGamePaused;
+    private Dictionary<ulong, bool> playersPausedDir;
+
+    private NetworkVariable<bool> gamePaused = new NetworkVariable<bool>(false);
 
     private void Awake() {
         Instance = this;
         playersReadyDic = new Dictionary<ulong, bool>();
+        playersPausedDir = new Dictionary<ulong, bool>();
     }
 
     public override void OnNetworkSpawn() {
         base.OnNetworkSpawn();
         gameState.OnValueChanged += OnGameStateValueChanged;
+        gamePaused.OnValueChanged += OnGamePauseValueChanged;
     }
 
     private void OnGameStateValueChanged(GameState previousvalue, GameState newvalue) {
         GameStateChangedAction?.Invoke();
+    }
+
+    private void OnGamePauseValueChanged(bool previousvalue, bool newvalue) {
+        if (gamePaused.Value) {
+            Time.timeScale = 0f;
+            MultiplayerGamePausedAction?.Invoke();
+        } else {
+            Time.timeScale = 1f;
+            MultiplayerGameUnpausedAction?.Invoke();
+        }
     }
 
     private void Start() {
@@ -139,13 +159,43 @@ public class MainGameManager : NetworkBehaviour {
     }
 
     public void TogglePauseGame() {
-        gamePaused = !gamePaused;
-        if (gamePaused) {
-            Time.timeScale = 0f;
-            GamePausedAction?.Invoke();
+        if (localGamePaused) {
+            localGamePaused = false;
+            SetGameUnpausedServerRpc();
+
+            LocalGameUnpausedAction?.Invoke();
         } else {
-            Time.timeScale = 1f;
-            GameUnpausedAction?.Invoke();
+            localGamePaused = true;
+            SetGamePausedServerRpc();
+
+            LocalGamePausedAction?.Invoke();
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void SetGamePausedServerRpc(ServerRpcParams serverRpcParams = default) {
+        playersPausedDir[serverRpcParams.Receive.SenderClientId] = true;
+
+        CheckGamePause();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void SetGameUnpausedServerRpc(ServerRpcParams serverRpcParams = default) {
+        playersPausedDir[serverRpcParams.Receive.SenderClientId] = false;
+
+        CheckGamePause();
+    }
+
+    private void CheckGamePause() {
+        foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds) {
+            if (playersPausedDir.ContainsKey(clientId) && playersPausedDir[clientId]) {
+                // 游戏处于暂停状态
+                gamePaused.Value = true;
+                return;
+            }
+        }
+
+        // 游戏处于非暂停状态
+        gamePaused.Value = false;
     }
 }

@@ -60,7 +60,7 @@ public class GameOptionsUI : MonoBehaviour {
         });
         gamepadPauseBtn.onClick.AddListener(() => { ClickRebindKey(PlayerInput.InputKey.GamepadPause); });
 
-        MainGameManager.Instance.GameUnpausedAction += OnGameUnpausedAction;
+        MainGameManager.Instance.LocalGameUnpausedAction += OnLocalGameUnpausedAction;
         PlayerInput.Instance.InputKeyRebindAction += OnInputKeyRebindAction;
 
         UpdateVisual();
@@ -68,7 +68,7 @@ public class GameOptionsUI : MonoBehaviour {
         HideRebindTips();
     }
 
-    private void OnGameUnpausedAction() {
+    private void OnLocalGameUnpausedAction() {
         Hide();
     }
 

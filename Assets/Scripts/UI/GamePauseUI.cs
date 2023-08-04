@@ -15,17 +15,17 @@ public class GamePauseUI : MonoBehaviour {
         resumeBtn.onClick.AddListener(() => { MainGameManager.Instance.TogglePauseGame(); });
         mainMenuBtn.onClick.AddListener(() => { SceneLoader.LoadScene(SceneLoader.SceneName.MainMenuScene); });
 
-        MainGameManager.Instance.GamePausedAction += OnGamePausedAction;
-        MainGameManager.Instance.GameUnpausedAction += OnGameUnpausedAction;
+        MainGameManager.Instance.LocalGamePausedAction += OnLocalGamePausedAction;
+        MainGameManager.Instance.LocalGameUnpausedAction += OnLocalGameUnpausedAction;
 
         Hide();
     }
 
-    private void OnGamePausedAction() {
+    private void OnLocalGamePausedAction() {
         Show();
     }
 
-    private void OnGameUnpausedAction() {
+    private void OnLocalGameUnpausedAction() {
         Hide();
     }
 
