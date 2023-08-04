@@ -4,10 +4,10 @@ using UnityEngine.UI;
 
 public class GameOverUI : MonoBehaviour {
     [SerializeField] private TextMeshProUGUI recipeDeliveredCountText;
-    [SerializeField] private Button replayBtn;
+    [SerializeField] private Button mainMenuBtn;
 
     private void Start() {
-        replayBtn.onClick.AddListener(() => { SceneLoader.LoadScene(SceneLoader.SceneName.GameScene); });
+        mainMenuBtn.onClick.AddListener(() => { SceneLoader.LoadScene(SceneLoader.SceneName.GameScene); });
 
         MainGameManager.Instance.GameStateChangedAction += OnGameStateChangedAction;
 
