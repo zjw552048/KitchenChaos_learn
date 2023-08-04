@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -7,8 +7,7 @@ public class MultiplayerNetworkManager : NetworkBehaviour {
 
     public static MultiplayerNetworkManager Instance { get; private set; }
 
-    public override void OnNetworkSpawn() {
-        base.OnNetworkSpawn();
+    private void Awake() {
         Instance = this;
     }
 
@@ -49,9 +48,9 @@ public class MultiplayerNetworkManager : NetworkBehaviour {
     private void DespawnKitchenObjectServerRpc(NetworkObjectReference kitchenObjectNetworkObjectReference) {
         kitchenObjectNetworkObjectReference.TryGet(out var kitchenObjectNetworkObject);
         var kitchenObject = kitchenObjectNetworkObject.GetComponent<KitchenObject>();
-        
+
         DespawnKitchenObjectClientRpc(kitchenObjectNetworkObjectReference);
-        
+
         kitchenObject.DestroySelf();
     }
 
@@ -59,7 +58,26 @@ public class MultiplayerNetworkManager : NetworkBehaviour {
     private void DespawnKitchenObjectClientRpc(NetworkObjectReference kitchenObjectNetworkObjectReference) {
         kitchenObjectNetworkObjectReference.TryGet(out var kitchenObjectNetworkObject);
         var kitchenObject = kitchenObjectNetworkObject.GetComponent<KitchenObject>();
-        
+
         kitchenObject.ClearKitchenObjectForParent();
+    }
+
+    public void StartHost() {
+        NetworkManager.Singleton.ConnectionApprovalCallback += ConnectionApprovalCallback;
+        NetworkManager.Singleton.StartHost();
+    }
+
+    private void ConnectionApprovalCallback(NetworkManager.ConnectionApprovalRequest request,
+        NetworkManager.ConnectionApprovalResponse response) {
+        if (MainGameManager.Instance.IsWaitToStartState()) {
+            response.Approved = true;
+            response.CreatePlayerObject = true;
+        } else {
+            response.Approved = false;
+        }
+    }
+
+    public void StartClient() {
+        NetworkManager.Singleton.StartClient();
     }
 }

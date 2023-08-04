@@ -154,6 +154,10 @@ public class MainGameManager : NetworkBehaviour {
     public int GetCountdownToStartTimer() {
         return Mathf.CeilToInt(countDownToStartTimer.Value);
     }
+    
+    public bool IsWaitToStartState() {
+        return gameState.Value == GameState.WaitToStart;
+    }
 
     public bool IsCountDownToStartState() {
         return gameState.Value == GameState.CountdownToStart;

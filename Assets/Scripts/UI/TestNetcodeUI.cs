@@ -1,4 +1,3 @@
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,13 +9,13 @@ public class TestNetcodeUI : MonoBehaviour {
     private void Start() {
         hostBtn.onClick.AddListener(() => {
             Debug.Log("StartHost!");
-            NetworkManager.Singleton.StartHost();
+            MultiplayerNetworkManager.Instance.StartHost();
             Hide();
         });
 
         clientBtn.onClick.AddListener(() => {
             Debug.Log("StartClient!");
-            NetworkManager.Singleton.StartClient();
+            MultiplayerNetworkManager.Instance.StartClient();
             Hide();
         });
     }
