@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Player : NetworkBehaviour, IKitchenObjectParent {
     public static Player LocalInstance { get; private set; }
-    
+
     [Header("出生点")] [SerializeField] private Vector3[] spawnPositionList;
 
     [Header("速度参数")] [SerializeField] private float moveSpeed = 7f;
@@ -39,14 +39,30 @@ public class Player : NetworkBehaviour, IKitchenObjectParent {
 
     public override void OnNetworkSpawn() {
         base.OnNetworkSpawn();
-        if (!IsOwner) {
-            return;
+        /*
+         * 注意，每个build.exe运行时，的NetworkManager都会实例化多个player对象:
+         * 1. 判断IsOwner时，每个build.exe仅找到自己所拥有的player，执行逻辑
+         * 2. 判断IsClient时，每个非host的build.exe找到本地所有player执行逻辑
+         * 3. 判断IsServer时，每个host的build.exe找到本地所有player执行逻辑
+         */
+        if (IsOwner) {
+            LocalInstance = this;
+
+            transform.position = spawnPositionList[(int) OwnerClientId];
+            AnyPlayerSpawnedAction?.Invoke();
         }
 
-        transform.position = spawnPositionList[(int)OwnerClientId];
+        if (IsServer) {
+            // 服务器本地实例化的Player都会注册该事件
+            NetworkManager.Singleton.OnClientDisconnectCallback += OnNetworkClientDisconnectCallback;
+        }
+    }
 
-        LocalInstance = this;
-        AnyPlayerSpawnedAction?.Invoke();
+    private void OnNetworkClientDisconnectCallback(ulong clientId) {
+        // 如果断线的Player手持物体，则销毁物体
+        if (clientId == OwnerClientId && HasKitchenObject()) {
+            KitchenObject.DespawnKitchenObject(GetKitchenObject());
+        }
     }
 
     private void Start() {
