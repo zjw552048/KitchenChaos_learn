@@ -18,9 +18,20 @@ public class StoveCounter : BaseCounter, IHasProgress {
         Burned,
     }
 
-    private StoveState stoveState;
+    private readonly NetworkVariable<StoveState> stoveState = new NetworkVariable<StoveState>(StoveState.Idle);
+    private readonly NetworkVariable<float> curProgress = new NetworkVariable<float>(0f);
     private FryingRecipeSo fryingRecipeSo;
     private BurningRecipeSo burningRecipeSo;
+
+    public override void OnNetworkSpawn() {
+        base.OnNetworkSpawn();
+
+        curProgress.OnValueChanged += OnCurProgressValueChanged;
+    }
+
+    private void OnCurProgressValueChanged(float previousvalue, float newvalue) {
+        RefreshProgressAction?.Invoke(curProgress.Value);
+    }
 
     private void Update() {
         if (!IsServer) {
@@ -32,7 +43,7 @@ public class StoveCounter : BaseCounter, IHasProgress {
         }
 
         var kitchenObject = GetKitchenObject();
-        switch (stoveState) {
+        switch (stoveState.Value) {
             case StoveState.Idle:
                 break;
 
@@ -40,8 +51,7 @@ public class StoveCounter : BaseCounter, IHasProgress {
                 var fryingSeconds = kitchenObject.GetCurrentFryingSeconds();
                 if (fryingSeconds < fryingRecipeSo.needFryingSeconds) {
                     fryingSeconds = kitchenObject.AddCurrentFryingSeconds(Time.deltaTime);
-                    var curProgress = fryingSeconds / fryingRecipeSo.needFryingSeconds;
-                    SyncProgressServerRpc(curProgress);
+                    curProgress.Value = fryingSeconds / fryingRecipeSo.needFryingSeconds;
                 } else {
                     KitchenObject.DespawnKitchenObject(kitchenObject);
                     KitchenObject.SpawnKitchenObject(fryingRecipeSo.output, this);
@@ -63,8 +73,7 @@ public class StoveCounter : BaseCounter, IHasProgress {
                 var burningSeconds = kitchenObject.GetCurrentBurningSeconds();
                 if (burningSeconds < burningRecipeSo.needBurningSeconds) {
                     burningSeconds = kitchenObject.AddCurrentBurningSeconds(Time.deltaTime);
-                    var curProgress = burningSeconds / burningRecipeSo.needBurningSeconds;
-                    SyncProgressServerRpc(curProgress);
+                    curProgress.Value = burningSeconds / burningRecipeSo.needBurningSeconds;
                 } else {
                     KitchenObject.DespawnKitchenObject(kitchenObject);
                     KitchenObject.SpawnKitchenObject(burningRecipeSo.output, this);
@@ -83,6 +92,11 @@ public class StoveCounter : BaseCounter, IHasProgress {
 
     [ServerRpc(RequireOwnership = false)]
     private void SetStoveStateServerRpc(StoveState nextStoveState, int nextKitchenObjectSoIndex = -1) {
+        stoveState.Value = nextStoveState;
+        if (nextStoveState is StoveState.Idle or StoveState.Burned) {
+            curProgress.Value = 0f;
+        }
+
         SetStoveStateClientRpc(nextStoveState, nextKitchenObjectSoIndex);
     }
 
@@ -90,11 +104,9 @@ public class StoveCounter : BaseCounter, IHasProgress {
     private void SetStoveStateClientRpc(StoveState nextStoveState, int nextKitchenObjectSoIndex) {
         StoveStateChangedAction?.Invoke(nextStoveState);
 
-        stoveState = nextStoveState;
         KitchenObjectSo nextKitchenObjectSo;
         switch (nextStoveState) {
             case StoveState.Idle:
-                RefreshProgressAction?.Invoke(0f);
                 fryingRecipeSo = null;
                 burningRecipeSo = null;
                 break;
@@ -114,7 +126,6 @@ public class StoveCounter : BaseCounter, IHasProgress {
                 break;
 
             case StoveState.Burned:
-                RefreshProgressAction?.Invoke(0f);
                 fryingRecipeSo = null;
                 burningRecipeSo = null;
                 break;
@@ -122,16 +133,6 @@ public class StoveCounter : BaseCounter, IHasProgress {
             default:
                 throw new ArgumentOutOfRangeException(nameof(nextStoveState), nextStoveState, null);
         }
-    }
-
-    [ServerRpc]
-    private void SyncProgressServerRpc(float curProgress) {
-        SyncProgressClientRpc(curProgress);
-    }
-
-    [ClientRpc]
-    private void SyncProgressClientRpc(float curProgress) {
-        RefreshProgressAction?.Invoke(curProgress);
     }
 
     public override void Interact(Player player) {
@@ -205,6 +206,6 @@ public class StoveCounter : BaseCounter, IHasProgress {
     }
 
     public bool IsBurningState() {
-        return stoveState == StoveState.Burning;
+        return stoveState.Value == StoveState.Burning;
     }
 }
