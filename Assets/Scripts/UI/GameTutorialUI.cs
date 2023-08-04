@@ -16,19 +16,18 @@ public class GameTutorialUI : MonoBehaviour {
 
     private void Start() {
         PlayerInput.Instance.InputKeyRebindAction += InstanceOnInputKeyRebindAction;
-        MainGameManager.Instance.GameStateChangedAction += OnGameStateChangedAction;
+        MainGameManager.Instance.LocalPlayerReadyChangedAction += OnLocalPlayerReadyChangedAction;
 
         UpdateVisual();
         Show();
     }
 
-    private void OnGameStateChangedAction() {
-        if (!MainGameManager.Instance.IsCountDownToStartState()) {
-            return;
+    private void OnLocalPlayerReadyChangedAction() {
+        if (MainGameManager.Instance.IsLocalPlayerReady()) {
+            Hide();
         }
-
-        Hide();
     }
+
 
     private void UpdateVisual() {
         moveUpKeyText.text = PlayerInput.Instance.GetBindingInputKeyText(PlayerInput.InputKey.MoveUp);

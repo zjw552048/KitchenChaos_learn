@@ -43,7 +43,6 @@ public class Player : NetworkBehaviour, IKitchenObjectParent {
             return;
         }
 
-        Debug.Log("OwnerClientId: " + OwnerClientId);
         transform.position = spawnPositionList[(int)OwnerClientId];
 
         LocalInstance = this;
