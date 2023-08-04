@@ -18,7 +18,7 @@ public class CuttingCounter : BaseCounter, IHasProgress {
                 if (playerHoldKitchenObject.TryGetPlate(out var plate)) {
                     // 如果player持有的是plate，则尝试将counter上的kitchenObject放入plate
                     if (plate.TryAddIngredient(counterHoldKitchenObject.GetKitchenObjectSo())) {
-                        counterHoldKitchenObject.DestroySelf();
+                        MultiplayerNetworkManager.Instance.DespawnKitchenObjectByServer(counterHoldKitchenObject);
                     }
                 }
             } else {

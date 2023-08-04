@@ -22,49 +22,6 @@ public class StoveCounter : BaseCounter, IHasProgress {
     private FryingRecipeSo fryingRecipeSo;
     private BurningRecipeSo burningRecipeSo;
 
-    [ServerRpc(RequireOwnership = false)]
-    private void SetStoveStateServerRpc(StoveState nextStoveState, int nextKitchenObjectSoIndex = -1) {
-        SetStoveStateClientRpc(nextStoveState, nextKitchenObjectSoIndex);
-    }
-
-    [ClientRpc]
-    private void SetStoveStateClientRpc(StoveState nextStoveState, int nextKitchenObjectSoIndex) {
-        StoveStateChangedAction?.Invoke(nextStoveState);
-        
-        stoveState = nextStoveState;
-        KitchenObjectSo nextKitchenObjectSo;
-        switch (nextStoveState) {
-            case StoveState.Idle:
-                RefreshProgressAction?.Invoke(0f);
-                fryingRecipeSo = null;
-                burningRecipeSo = null;
-                break;
-
-            case StoveState.Frying:
-                nextKitchenObjectSo =
-                    MultiplayerNetworkManager.Instance.GetKitchenObjectSoByIndex(nextKitchenObjectSoIndex);
-                fryingRecipeSo = GetFryingRecipeByInputSo(nextKitchenObjectSo);
-                burningRecipeSo = null;
-                break;
-
-            case StoveState.Burning:
-                nextKitchenObjectSo =
-                    MultiplayerNetworkManager.Instance.GetKitchenObjectSoByIndex(nextKitchenObjectSoIndex);
-                fryingRecipeSo = null;
-                burningRecipeSo = GetBurningRecipeByInputSo(nextKitchenObjectSo);
-                break;
-
-            case StoveState.Burned:
-                RefreshProgressAction?.Invoke(0f);
-                fryingRecipeSo = null;
-                burningRecipeSo = null;
-                break;
-
-            default:
-                throw new ArgumentOutOfRangeException(nameof(nextStoveState), nextStoveState, null);
-        }
-    }
-
     private void Update() {
         if (!IsServer) {
             return;
@@ -124,6 +81,49 @@ public class StoveCounter : BaseCounter, IHasProgress {
         }
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    private void SetStoveStateServerRpc(StoveState nextStoveState, int nextKitchenObjectSoIndex = -1) {
+        SetStoveStateClientRpc(nextStoveState, nextKitchenObjectSoIndex);
+    }
+
+    [ClientRpc]
+    private void SetStoveStateClientRpc(StoveState nextStoveState, int nextKitchenObjectSoIndex) {
+        StoveStateChangedAction?.Invoke(nextStoveState);
+
+        stoveState = nextStoveState;
+        KitchenObjectSo nextKitchenObjectSo;
+        switch (nextStoveState) {
+            case StoveState.Idle:
+                RefreshProgressAction?.Invoke(0f);
+                fryingRecipeSo = null;
+                burningRecipeSo = null;
+                break;
+
+            case StoveState.Frying:
+                nextKitchenObjectSo =
+                    MultiplayerNetworkManager.Instance.GetKitchenObjectSoByIndex(nextKitchenObjectSoIndex);
+                fryingRecipeSo = GetFryingRecipeByInputSo(nextKitchenObjectSo);
+                burningRecipeSo = null;
+                break;
+
+            case StoveState.Burning:
+                nextKitchenObjectSo =
+                    MultiplayerNetworkManager.Instance.GetKitchenObjectSoByIndex(nextKitchenObjectSoIndex);
+                fryingRecipeSo = null;
+                burningRecipeSo = GetBurningRecipeByInputSo(nextKitchenObjectSo);
+                break;
+
+            case StoveState.Burned:
+                RefreshProgressAction?.Invoke(0f);
+                fryingRecipeSo = null;
+                burningRecipeSo = null;
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException(nameof(nextStoveState), nextStoveState, null);
+        }
+    }
+
     [ServerRpc]
     private void SyncProgressServerRpc(float curProgress) {
         SyncProgressClientRpc(curProgress);
@@ -148,7 +148,7 @@ public class StoveCounter : BaseCounter, IHasProgress {
                     return;
                 }
 
-                counterHoldKitchenObject.DestroySelf();
+                MultiplayerNetworkManager.Instance.DespawnKitchenObjectByServer(counterHoldKitchenObject);
 
                 SetStoveStateServerRpc(StoveState.Idle);
             } else {

@@ -9,14 +9,14 @@ public class ClearCounter : BaseCounter {
                 if (playerHoldKitchenObject.TryGetPlate(out var plate)) {
                     // 如果player持有的是plate，则尝试将counter上的kitchenObject放入plate
                     if (plate.TryAddIngredient(counterHoldKitchenObject.GetKitchenObjectSo())) {
-                        counterHoldKitchenObject.DestroySelf();
+                        MultiplayerNetworkManager.Instance.DespawnKitchenObjectByServer(counterHoldKitchenObject);
                     }
                 }
 
                 if (counterHoldKitchenObject.TryGetPlate(out plate)) {
                     // 如果counter放置的是plate，则尝试将player持有的kitchenObject放入plate
                     if (plate.TryAddIngredient(playerHoldKitchenObject.GetKitchenObjectSo())) {
-                        playerHoldKitchenObject.DestroySelf();
+                        MultiplayerNetworkManager.Instance.DespawnKitchenObjectByServer(playerHoldKitchenObject);
                     }
                 }
             } else {
