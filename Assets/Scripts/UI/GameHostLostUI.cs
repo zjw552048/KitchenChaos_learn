@@ -5,7 +5,10 @@ using UnityEngine.UI;
 public class GameHostLostUI : MonoBehaviour {
     [SerializeField] private Button mainMenuBtn;
     private void Start() {
-        mainMenuBtn.onClick.AddListener(() => { SceneLoader.LoadScene(SceneLoader.SceneName.MainMenuScene); });
+        mainMenuBtn.onClick.AddListener(() => {
+            NetworkManager.Singleton.Shutdown();
+            SceneLoader.LoadScene(SceneLoader.SceneName.MainMenuScene);
+        });
         
         NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnectCallback;
         Hide();

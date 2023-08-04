@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,7 +14,10 @@ public class GamePauseUI : MonoBehaviour {
             Hide();
         });
         resumeBtn.onClick.AddListener(() => { MainGameManager.Instance.TogglePauseGame(); });
-        mainMenuBtn.onClick.AddListener(() => { SceneLoader.LoadScene(SceneLoader.SceneName.MainMenuScene); });
+        mainMenuBtn.onClick.AddListener(() => {
+            NetworkManager.Singleton.Shutdown();
+            SceneLoader.LoadScene(SceneLoader.SceneName.MainMenuScene);
+        });
 
         MainGameManager.Instance.LocalGamePausedAction += OnLocalGamePausedAction;
         MainGameManager.Instance.LocalGameUnpausedAction += OnLocalGameUnpausedAction;
@@ -31,7 +35,7 @@ public class GamePauseUI : MonoBehaviour {
 
     public void Show() {
         gameObject.SetActive(true);
-        
+
         optionsBtn.Select();
     }
 

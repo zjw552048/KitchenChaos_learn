@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,7 +8,10 @@ public class GameOverUI : MonoBehaviour {
     [SerializeField] private Button mainMenuBtn;
 
     private void Start() {
-        mainMenuBtn.onClick.AddListener(() => { SceneLoader.LoadScene(SceneLoader.SceneName.GameScene); });
+        mainMenuBtn.onClick.AddListener(() => {
+            NetworkManager.Singleton.Shutdown();
+            SceneLoader.LoadScene(SceneLoader.SceneName.MainMenuScene);
+        });
 
         MainGameManager.Instance.GameStateChangedAction += OnGameStateChangedAction;
 
