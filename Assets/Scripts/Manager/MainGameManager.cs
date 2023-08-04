@@ -48,7 +48,10 @@ public class MainGameManager : NetworkBehaviour {
         base.OnNetworkSpawn();
         gameState.OnValueChanged += OnGameStateValueChanged;
         gamePaused.OnValueChanged += OnGamePauseValueChanged;
-        NetworkManager.Singleton.OnClientDisconnectCallback += OnNetworkClientDisconnectCallback;
+
+        if (IsServer) {
+            NetworkManager.Singleton.OnClientDisconnectCallback += OnNetworkClientDisconnectCallback;
+        }
     }
 
     private void OnGameStateValueChanged(GameState previousvalue, GameState newvalue) {
