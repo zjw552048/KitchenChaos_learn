@@ -34,7 +34,9 @@ public class MainGameManager : NetworkBehaviour {
     private bool localGamePaused;
     private Dictionary<ulong, bool> playersPausedDir;
 
-    private NetworkVariable<bool> gamePaused = new NetworkVariable<bool>(false);
+    private readonly NetworkVariable<bool> gamePaused = new NetworkVariable<bool>(false);
+
+    private bool autoCheckGamePaused;
 
     private void Awake() {
         Instance = this;
@@ -46,6 +48,7 @@ public class MainGameManager : NetworkBehaviour {
         base.OnNetworkSpawn();
         gameState.OnValueChanged += OnGameStateValueChanged;
         gamePaused.OnValueChanged += OnGamePauseValueChanged;
+        NetworkManager.Singleton.OnClientDisconnectCallback += OnNetworkClientDisconnectCallback;
     }
 
     private void OnGameStateValueChanged(GameState previousvalue, GameState newvalue) {
@@ -60,6 +63,10 @@ public class MainGameManager : NetworkBehaviour {
             Time.timeScale = 1f;
             MultiplayerGameUnpausedAction?.Invoke();
         }
+    }
+
+    private void OnNetworkClientDisconnectCallback(ulong client) {
+        autoCheckGamePaused = true;
     }
 
     private void Start() {
@@ -134,6 +141,13 @@ public class MainGameManager : NetworkBehaviour {
         }
     }
 
+    private void LateUpdate() {
+        if (autoCheckGamePaused) {
+            autoCheckGamePaused = false;
+            CheckGamePaused();
+        }
+    }
+
     public int GetCountdownToStartTimer() {
         return Mathf.CeilToInt(countDownToStartTimer.Value);
     }
@@ -176,17 +190,17 @@ public class MainGameManager : NetworkBehaviour {
     private void SetGamePausedServerRpc(ServerRpcParams serverRpcParams = default) {
         playersPausedDir[serverRpcParams.Receive.SenderClientId] = true;
 
-        CheckGamePause();
+        CheckGamePaused();
     }
 
     [ServerRpc(RequireOwnership = false)]
     private void SetGameUnpausedServerRpc(ServerRpcParams serverRpcParams = default) {
         playersPausedDir[serverRpcParams.Receive.SenderClientId] = false;
 
-        CheckGamePause();
+        CheckGamePaused();
     }
 
-    private void CheckGamePause() {
+    private void CheckGamePaused() {
         foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds) {
             if (playersPausedDir.ContainsKey(clientId) && playersPausedDir[clientId]) {
                 // 游戏处于暂停状态
