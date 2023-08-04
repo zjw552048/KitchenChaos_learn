@@ -6,8 +6,8 @@ public class KitchenObject : NetworkBehaviour {
 
     private IKitchenObjectParent kitchenObjectParent;
     private int currentCutCount;
-    private float fryingSeconds;
-    private float burningSeconds;
+    private readonly NetworkVariable<float> fryingSeconds = new NetworkVariable<float>(0f);
+    private readonly NetworkVariable<float> burningSeconds = new NetworkVariable<float>(0f);
 
     private FollowTransform followTransform;
 
@@ -28,21 +28,21 @@ public class KitchenObject : NetworkBehaviour {
     }
 
     public float GetCurrentFryingSeconds() {
-        return fryingSeconds;
+        return fryingSeconds.Value;
     }
 
     public float AddCurrentFryingSeconds(float dt) {
-        fryingSeconds += dt;
-        return fryingSeconds;
+        fryingSeconds.Value += dt;
+        return fryingSeconds.Value;
     }
 
     public float GetCurrentBurningSeconds() {
-        return burningSeconds;
+        return burningSeconds.Value;
     }
 
     public float AddCurrentBurningSeconds(float dt) {
-        burningSeconds += dt;
-        return burningSeconds;
+        burningSeconds.Value += dt;
+        return burningSeconds.Value;
     }
 
     public bool TryGetPlate(out PlateKitchenObject plateKitchenObject) {

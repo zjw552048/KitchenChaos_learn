@@ -33,11 +33,11 @@ public class MultiplayerNetworkManager : NetworkBehaviour {
         kitchenObject.SetKitchenObjectParent(kitchenObjectParent);
     }
 
-    private int GetKitchenObjectIndexInList(KitchenObjectSo kitchenObjectSo) {
+    public int GetKitchenObjectIndexInList(KitchenObjectSo kitchenObjectSo) {
         return kitchenObjectListSo.kitchenObjectSos.IndexOf(kitchenObjectSo);
     }
 
-    private KitchenObjectSo GetKitchenObjectSoByIndex(int kitchenObjectSoIndex) {
+    public KitchenObjectSo GetKitchenObjectSoByIndex(int kitchenObjectSoIndex) {
         return kitchenObjectListSo.kitchenObjectSos[kitchenObjectSoIndex];
     }
 
