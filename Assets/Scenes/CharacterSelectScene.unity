@@ -1104,7 +1104,7 @@ GameObject:
   - component: {fileID: 1237288421}
   - component: {fileID: 1237288423}
   m_Layer: 0
-  m_Name: SelectCharacterReadyManager
+  m_Name: CharacterSelectReadyManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

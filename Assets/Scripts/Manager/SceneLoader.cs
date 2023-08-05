@@ -7,7 +7,7 @@ public static class SceneLoader {
         LoadingScene,
         GameScene,
         LobbyScene,
-        SelectCharacterScene,
+        CharacterSelectScene,
     }
 
     private static SceneName targetSceneName;

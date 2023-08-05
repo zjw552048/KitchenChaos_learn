@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SelectCharacterPlayer : MonoBehaviour {
+public class CharacterSelectPlayer : MonoBehaviour {
     [SerializeField] private GameObject readyTextGameObject;
     [SerializeField] private PlayerVisual playerVisual;
     private int playerIndex;
@@ -10,8 +10,8 @@ public class SelectCharacterPlayer : MonoBehaviour {
     }
 
     private void Start() {
-        MultiplayerNetworkManager.Instance.SelectCharacterPlayersChangedAction += OnSelectCharacterPlayersChangedAction;
-        SelectCharacterReadyManager.Instance.PlayersReadyStateChangedAction += OnPlayersReadyStateChangedAction;
+        MultiplayerNetworkManager.Instance.CharacterSelectPlayersChangedAction += OnCharacterSelectPlayersChangedAction;
+        CharacterSelectReadyManager.Instance.PlayersReadyStateChangedAction += OnPlayersReadyStateChangedAction;
 
         UpdatePlayer();
     }
@@ -20,7 +20,7 @@ public class SelectCharacterPlayer : MonoBehaviour {
         UpdatePlayer();
     }
 
-    private void OnSelectCharacterPlayersChangedAction() {
+    private void OnCharacterSelectPlayersChangedAction() {
         UpdatePlayer();
     }
 
@@ -29,7 +29,7 @@ public class SelectCharacterPlayer : MonoBehaviour {
             Show();
 
             var playerData = MultiplayerNetworkManager.Instance.GetPlayerDataByPlayerIndex(playerIndex);
-            var playerReady = SelectCharacterReadyManager.Instance.IsPlayerReady(playerData.clientId);
+            var playerReady = CharacterSelectReadyManager.Instance.IsPlayerReady(playerData.clientId);
             readyTextGameObject.SetActive(playerReady);
 
             var playerColor = MultiplayerNetworkManager.Instance.GetPlayerColorByPlayerIndex(playerIndex);

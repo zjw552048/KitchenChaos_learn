@@ -8,7 +8,7 @@ public class TestLobbyUI : MonoBehaviour {
     private void Start() {
         createBtn.onClick.AddListener(() => {
             MultiplayerNetworkManager.Instance.StartHost();
-            SceneLoader.LoadNetworkScene(SceneLoader.SceneName.SelectCharacterScene);
+            SceneLoader.LoadNetworkScene(SceneLoader.SceneName.CharacterSelectScene);
         });
         joinBtn.onClick.AddListener(() => {
             MultiplayerNetworkManager.Instance.StartClient();

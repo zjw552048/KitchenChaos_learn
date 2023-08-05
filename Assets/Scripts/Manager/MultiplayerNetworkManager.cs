@@ -11,25 +11,25 @@ public class MultiplayerNetworkManager : NetworkBehaviour {
 
     public static MultiplayerNetworkManager Instance { get; private set; }
 
-    private NetworkList<PlayerData> selectCharacterPlayers;
+    private NetworkList<PlayerData> characterSelectPlayers;
 
     private const int MAX_PLAYER_COUNT = 4;
 
     public event Action TryingToJoinGameAction;
     public event Action FailedToJoinGameAction;
-    public event Action SelectCharacterPlayersChangedAction;
+    public event Action CharacterSelectPlayersChangedAction;
 
     private void Awake() {
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
         // 必须在awake初始化，否则报错：A Native Collection has not been disposed, resulting in a memory leak
-        selectCharacterPlayers = new NetworkList<PlayerData>();
-        selectCharacterPlayers.OnListChanged += OnNetworkListSelectCharacterPlayersChanged;
+        characterSelectPlayers = new NetworkList<PlayerData>();
+        characterSelectPlayers.OnListChanged += OnNetworkListCharacterSelectPlayersChanged;
     }
 
-    private void OnNetworkListSelectCharacterPlayersChanged(NetworkListEvent<PlayerData> changeEvent) {
-        SelectCharacterPlayersChangedAction?.Invoke();
+    private void OnNetworkListCharacterSelectPlayersChanged(NetworkListEvent<PlayerData> changeEvent) {
+        CharacterSelectPlayersChangedAction?.Invoke();
     }
 
     #region 生成、销毁KitchenObject
@@ -97,25 +97,25 @@ public class MultiplayerNetworkManager : NetworkBehaviour {
     }
 
     private void ServerOnClientConnectedCallback(ulong clientId) {
-        selectCharacterPlayers.Add(new PlayerData {
+        characterSelectPlayers.Add(new PlayerData {
             clientId = clientId,
         });
     }
 
     private void ServerOnClientDisconnectCallback(ulong clientId) {
-        foreach (var selectCharacterPlayer in selectCharacterPlayers) {
-            if (selectCharacterPlayer.clientId != clientId) {
+        foreach (var characterSelectPlayer in characterSelectPlayers) {
+            if (characterSelectPlayer.clientId != clientId) {
                 continue;
             }
 
-            selectCharacterPlayers.Remove(selectCharacterPlayer);
+            characterSelectPlayers.Remove(characterSelectPlayer);
             return;
         }
     }
 
     private void ConnectionApprovalCallback(NetworkManager.ConnectionApprovalRequest request,
         NetworkManager.ConnectionApprovalResponse response) {
-        if (SceneManager.GetActiveScene().name != SceneLoader.SceneName.SelectCharacterScene.ToString()) {
+        if (SceneManager.GetActiveScene().name != SceneLoader.SceneName.CharacterSelectScene.ToString()) {
             response.Approved = false;
             response.Reason = "Game already has started";
             return;
@@ -143,14 +143,14 @@ public class MultiplayerNetworkManager : NetworkBehaviour {
 
     #endregion
 
-    #region SelectCharacter 选择角色
+    #region CharacterSelect 选择角色
 
     public bool IsPlayerIndexConnected(int playerIndex) {
-        return playerIndex < selectCharacterPlayers.Count;
+        return playerIndex < characterSelectPlayers.Count;
     }
 
     public PlayerData GetPlayerDataByPlayerIndex(int playerIndex) {
-        return selectCharacterPlayers[playerIndex];
+        return characterSelectPlayers[playerIndex];
     }
 
     public Color GetPlayerColorByPlayerIndex(int playerIndex) {

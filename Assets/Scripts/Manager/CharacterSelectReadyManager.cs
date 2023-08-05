@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class SelectCharacterReadyManager : NetworkBehaviour {
-    public static SelectCharacterReadyManager Instance { get; private set; }
+public class CharacterSelectReadyManager : NetworkBehaviour {
+    public static CharacterSelectReadyManager Instance { get; private set; }
 
     public event Action PlayersReadyStateChangedAction;
     private Dictionary<ulong, bool> playersReadyDic;
@@ -15,12 +15,12 @@ public class SelectCharacterReadyManager : NetworkBehaviour {
     }
 
     public void SetPlayerReady() {
-        SelectCharacterReadyServerRpc();
+        CharacterSelectReadyServerRpc();
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void SelectCharacterReadyServerRpc(ServerRpcParams serverRpcParams = default) {
-        SelectCharacterReadyClientRpc(serverRpcParams.Receive.SenderClientId);
+    private void CharacterSelectReadyServerRpc(ServerRpcParams serverRpcParams = default) {
+        CharacterSelectReadyClientRpc(serverRpcParams.Receive.SenderClientId);
 
         foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds) {
             if (!playersReadyDic.ContainsKey(clientId) || !playersReadyDic[clientId]) {
@@ -33,7 +33,7 @@ public class SelectCharacterReadyManager : NetworkBehaviour {
     }
 
     [ClientRpc]
-    private void SelectCharacterReadyClientRpc(ulong clientId) {
+    private void CharacterSelectReadyClientRpc(ulong clientId) {
         if (!playersReadyDic.ContainsKey(clientId)) {
             playersReadyDic[clientId] = false;
         }
