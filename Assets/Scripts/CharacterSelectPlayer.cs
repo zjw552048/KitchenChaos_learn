@@ -15,8 +15,7 @@ public class CharacterSelectPlayer : MonoBehaviour {
 
     private void Start() {
         if (NetworkManager.Singleton.IsServer) {
-            var playerData = MultiplayerNetworkManager.Instance.GetPlayerDataByPlayerIndex(playerIndex);
-            if (playerData.clientId != NetworkManager.ServerClientId) {
+            if (playerIndex != 0) {
                 // 服务端显示踢其他玩家按钮
                 kickPlayerBtn.gameObject.SetActive(true);
                 kickPlayerBtn.onClick.AddListener(() => {
