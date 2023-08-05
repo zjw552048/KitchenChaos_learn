@@ -6,7 +6,6 @@ public class GameHostLostUI : MonoBehaviour {
     [SerializeField] private Button mainMenuBtn;
     private void Start() {
         mainMenuBtn.onClick.AddListener(() => {
-            NetworkManager.Singleton.Shutdown();
             SceneLoader.LoadScene(SceneLoader.SceneName.MainMenuScene);
         });
         

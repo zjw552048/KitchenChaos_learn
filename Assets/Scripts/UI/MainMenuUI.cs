@@ -7,7 +7,9 @@ public class MainMenuUI : MonoBehaviour {
 
     private void Start() {
         Time.timeScale = 1f;
-        playBtn.onClick.AddListener(() => { SceneLoader.LoadScene(SceneLoader.SceneName.GameScene); });
+        playBtn.onClick.AddListener(() => {
+            SceneLoader.LoadScene(SceneLoader.SceneName.LobbyScene);
+        });
 
         quitBtn.onClick.AddListener(Application.Quit);
     }

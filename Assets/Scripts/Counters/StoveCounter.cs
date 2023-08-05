@@ -29,7 +29,7 @@ public class StoveCounter : BaseCounter, IHasProgress {
         curProgress.OnValueChanged += OnCurProgressValueChanged;
     }
 
-    private void OnCurProgressValueChanged(float previousvalue, float newvalue) {
+    private void OnCurProgressValueChanged(float previousValue, float newValue) {
         RefreshProgressAction?.Invoke(curProgress.Value);
     }
 

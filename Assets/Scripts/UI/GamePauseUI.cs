@@ -15,7 +15,6 @@ public class GamePauseUI : MonoBehaviour {
         });
         resumeBtn.onClick.AddListener(() => { MainGameManager.Instance.TogglePauseGame(); });
         mainMenuBtn.onClick.AddListener(() => {
-            NetworkManager.Singleton.Shutdown();
             SceneLoader.LoadScene(SceneLoader.SceneName.MainMenuScene);
         });
 

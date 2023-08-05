@@ -9,7 +9,6 @@ public class GameOverUI : MonoBehaviour {
 
     private void Start() {
         mainMenuBtn.onClick.AddListener(() => {
-            NetworkManager.Singleton.Shutdown();
             SceneLoader.LoadScene(SceneLoader.SceneName.MainMenuScene);
         });
 

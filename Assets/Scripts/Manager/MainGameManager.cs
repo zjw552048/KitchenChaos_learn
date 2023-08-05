@@ -2,9 +2,12 @@ using System;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MainGameManager : NetworkBehaviour {
     public static MainGameManager Instance { get; private set; }
+
+    [SerializeField] private Transform playerPrefab;
 
     private const float GAME_PLAYER_TOTAL_TIME = 120f;
 
@@ -51,14 +54,16 @@ public class MainGameManager : NetworkBehaviour {
 
         if (IsServer) {
             NetworkManager.Singleton.OnClientDisconnectCallback += OnNetworkClientDisconnectCallback;
+            // OnLoad客户端场景加载完成、OnLoadEventCompleted所有客户端场景加载完成
+            NetworkManager.Singleton.SceneManager.OnLoadEventCompleted += NetworkSceneManagerOnLoadEventCompleted;
         }
     }
 
-    private void OnGameStateValueChanged(GameState previousvalue, GameState newvalue) {
+    private void OnGameStateValueChanged(GameState previousValue, GameState newValue) {
         GameStateChangedAction?.Invoke();
     }
 
-    private void OnGamePauseValueChanged(bool previousvalue, bool newvalue) {
+    private void OnGamePauseValueChanged(bool previousValue, bool newValue) {
         if (gamePaused.Value) {
             Time.timeScale = 0f;
             MultiplayerGamePausedAction?.Invoke();
@@ -70,6 +75,15 @@ public class MainGameManager : NetworkBehaviour {
 
     private void OnNetworkClientDisconnectCallback(ulong client) {
         autoCheckGamePaused = true;
+    }
+
+    private void NetworkSceneManagerOnLoadEventCompleted(string sceneName, LoadSceneMode loadSceneMode,
+        List<ulong> clientsCompleted, List<ulong> clientsTimedOut) {
+        foreach (var clientId in clientsCompleted) {
+            var playerTransform = Instantiate(playerPrefab);
+            var playerNetworkObject = playerTransform.GetComponent<NetworkObject>();
+            playerNetworkObject.SpawnAsPlayerObject(clientId, true);
+        }
     }
 
     private void Start() {
@@ -154,7 +168,7 @@ public class MainGameManager : NetworkBehaviour {
     public int GetCountdownToStartTimer() {
         return Mathf.CeilToInt(countDownToStartTimer.Value);
     }
-    
+
     public bool IsWaitToStartState() {
         return gameState.Value == GameState.WaitToStart;
     }
