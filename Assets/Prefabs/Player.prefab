@@ -127,6 +127,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3629f157a37a3f94eaaff53d0e25c4a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerVisual: {fileID: 2221176009718193970}
   spawnPositionList:
   - {x: -2, y: 0, z: 1}
   - {x: 2, y: 0, z: 1}
@@ -135,7 +136,6 @@ MonoBehaviour:
   moveSpeed: 7
   rotateSpeed: 10
   playerRadius: 0.7
-  playerHeight: 2
   interactiveDistance: 2
   interactiveLayerMask:
     serializedVersion: 2
@@ -288,6 +288,18 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 8623748091363506239}
   m_SourcePrefab: {fileID: 100100000, guid: 1c5dda3c7cd3cf742afcade5419faeab, type: 3}
+--- !u!114 &2221176009718193970 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1680448386108477400, guid: 1c5dda3c7cd3cf742afcade5419faeab,
+    type: 3}
+  m_PrefabInstance: {fileID: 684851945906671850}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2609906468914838733}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8309368101f68c4fa9ef870f9a3fb29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2609906468914838733 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3294758251327466535, guid: 1c5dda3c7cd3cf742afcade5419faeab,

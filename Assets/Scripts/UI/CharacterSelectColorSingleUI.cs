@@ -19,7 +19,7 @@ public class CharacterSelectColorSingleUI : MonoBehaviour {
 
         MultiplayerNetworkManager.Instance.CharacterSelectPlayersChangedAction += OnCharacterSelectPlayersChangedAction;
 
-        colorImage.color = MultiplayerNetworkManager.Instance.GetPlayerColor(colorId);
+        colorImage.color = MultiplayerNetworkManager.Instance.GetColorByColorId(colorId);
         UpdateIsSelected();
     }
 

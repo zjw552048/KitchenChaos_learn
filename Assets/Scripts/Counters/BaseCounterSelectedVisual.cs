@@ -13,11 +13,11 @@ public class BaseCounterSelectedVisual : MonoBehaviour {
         if (Player.LocalInstance != null) {
             Player.LocalInstance.SelectedCounterChangedAction += OnSelectedCounterChangedAction;
         } else {
-            Player.AnyPlayerSpawnedAction += OnAnyPlayerSpawnedAction;
+            Player.OwnerPlayerSpawnedAction += OnOwnerPlayerSpawnedAction;
         }
     }
 
-    private void OnAnyPlayerSpawnedAction() {
+    private void OnOwnerPlayerSpawnedAction() {
         if (Player.LocalInstance != null) {
             Player.LocalInstance.SelectedCounterChangedAction += OnSelectedCounterChangedAction;
         }

@@ -154,7 +154,7 @@ public class MultiplayerNetworkManager : NetworkBehaviour {
         return characterSelectPlayers[playerIndex];
     }
 
-    public Color GetPlayerColor(int colorId) {
+    public Color GetColorByColorId(int colorId) {
         // 因为playerIndex永远小于colors的最大index，暂时这么实现
         return colors[colorId];
     }
@@ -164,7 +164,7 @@ public class MultiplayerNetworkManager : NetworkBehaviour {
         return GetPlayerDataByClientId(clientId);
     }
 
-    private PlayerData GetPlayerDataByClientId(ulong clientId) {
+    public PlayerData GetPlayerDataByClientId(ulong clientId) {
         foreach (var characterSelectPlayer in characterSelectPlayers) {
             if (characterSelectPlayer.clientId == clientId) {
                 return characterSelectPlayer;

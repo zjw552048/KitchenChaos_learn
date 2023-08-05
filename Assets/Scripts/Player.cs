@@ -5,6 +5,7 @@ using UnityEngine;
 public class Player : NetworkBehaviour, IKitchenObjectParent {
     public static Player LocalInstance { get; private set; }
 
+    [Header("可视脚本")] [SerializeField] private PlayerVisual playerVisual;
     [Header("出生点")] [SerializeField] private Vector3[] spawnPositionList;
 
     [Header("速度参数")] [SerializeField] private float moveSpeed = 7f;
@@ -27,10 +28,10 @@ public class Player : NetworkBehaviour, IKitchenObjectParent {
     private KitchenObject holdKitchenObject;
 
     public event Action<BaseCounter> SelectedCounterChangedAction;
-    public static event Action AnyPlayerSpawnedAction;
+    public static event Action OwnerPlayerSpawnedAction;
 
     public static void ResetStaticData() {
-        AnyPlayerSpawnedAction = null;
+        OwnerPlayerSpawnedAction = null;
     }
 
     private void Awake() {
@@ -49,13 +50,17 @@ public class Player : NetworkBehaviour, IKitchenObjectParent {
             LocalInstance = this;
 
             transform.position = spawnPositionList[(int) OwnerClientId];
-            AnyPlayerSpawnedAction?.Invoke();
+            OwnerPlayerSpawnedAction?.Invoke();
         }
 
         if (IsServer) {
             // 服务器本地实例化的Player都会注册该事件
             NetworkManager.Singleton.OnClientDisconnectCallback += OnNetworkClientDisconnectCallback;
         }
+
+        var playerData = MultiplayerNetworkManager.Instance.GetPlayerDataByClientId(OwnerClientId);
+        var playerColor = MultiplayerNetworkManager.Instance.GetColorByColorId(playerData.colorId);
+        playerVisual.SetMaterialColor(playerColor);
     }
 
     private void OnNetworkClientDisconnectCallback(ulong clientId) {
