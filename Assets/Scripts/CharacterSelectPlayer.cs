@@ -1,8 +1,11 @@
+using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CharacterSelectPlayer : MonoBehaviour {
-    [SerializeField] private GameObject readyTextGameObject;
     [SerializeField] private PlayerVisual playerVisual;
+    [SerializeField] private GameObject readyTextGameObject;
+    [SerializeField] private Button kickPlayerBtn;
     private int playerIndex;
 
     private void Awake() {
@@ -10,6 +13,24 @@ public class CharacterSelectPlayer : MonoBehaviour {
     }
 
     private void Start() {
+        if (NetworkManager.Singleton.IsServer) {
+            var playerData = MultiplayerNetworkManager.Instance.GetPlayerDataByPlayerIndex(playerIndex);
+            if (playerData.clientId != NetworkManager.ServerClientId) {
+                // 服务端显示踢其他玩家按钮
+                kickPlayerBtn.gameObject.SetActive(true);
+                kickPlayerBtn.onClick.AddListener(() => {
+                    MultiplayerNetworkManager.Instance.KickPlayer(playerIndex);
+                });
+            } else {
+                // 服务端不显示踢自己按钮
+                kickPlayerBtn.gameObject.SetActive(false);
+            }
+        } else {
+            // 客户端不显示踢人按钮
+            kickPlayerBtn.gameObject.SetActive(false);
+        }
+
+
         MultiplayerNetworkManager.Instance.CharacterSelectPlayersChangedAction += OnCharacterSelectPlayersChangedAction;
         CharacterSelectReadyManager.Instance.PlayersReadyStateChangedAction += OnPlayersReadyStateChangedAction;
 

@@ -1,3 +1,4 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +12,10 @@ public class GameHostLostUI : MonoBehaviour {
         
         NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnectCallback;
         Hide();
+    }
+
+    private void OnDestroy() {
+        NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnectCallback;
     }
 
     private void OnClientDisconnectCallback(ulong clientId) {

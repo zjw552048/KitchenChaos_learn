@@ -226,5 +226,13 @@ public class MultiplayerNetworkManager : NetworkBehaviour {
         characterSelectPlayers[playerIndex] = playerData;
     }
 
+    public void KickPlayer(int playerIndex) {
+        var playerData = GetPlayerDataByPlayerIndex(playerIndex);
+        var clientId = playerData.clientId;
+        NetworkManager.Singleton.DisconnectClient(clientId);
+        // 主动断开客户端连接时，存在概率不处罚注册事件，手动触发服务端监听的Disconnect事件
+        ServerOnClientDisconnectCallback(clientId);
+    }
+
     #endregion
 }
