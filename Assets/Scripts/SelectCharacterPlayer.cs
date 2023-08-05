@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class SelectCharacterPlayer : MonoBehaviour {
     [SerializeField] private GameObject readyTextGameObject;
+    [SerializeField] private PlayerVisual playerVisual;
     private int playerIndex;
 
     private void Awake() {
@@ -30,6 +31,9 @@ public class SelectCharacterPlayer : MonoBehaviour {
             var playerData = MultiplayerNetworkManager.Instance.GetPlayerDataByPlayerIndex(playerIndex);
             var playerReady = SelectCharacterReadyManager.Instance.IsPlayerReady(playerData.clientId);
             readyTextGameObject.SetActive(playerReady);
+
+            var playerColor = MultiplayerNetworkManager.Instance.GetPlayerColorByPlayerIndex(playerIndex);
+            playerVisual.SetMaterialColor(playerColor);
         } else {
             Hide();
         }

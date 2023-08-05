@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class MultiplayerNetworkManager : NetworkBehaviour {
     [SerializeField] private KitchenObjectListSo kitchenObjectListSo;
+
+    [SerializeField] private List<Color> colors;
 
     public static MultiplayerNetworkManager Instance { get; private set; }
 
@@ -148,6 +151,11 @@ public class MultiplayerNetworkManager : NetworkBehaviour {
 
     public PlayerData GetPlayerDataByPlayerIndex(int playerIndex) {
         return selectCharacterPlayers[playerIndex];
+    }
+
+    public Color GetPlayerColorByPlayerIndex(int playerIndex) {
+        // 因为playerIndex永远小于colors的最大index，暂时这么实现
+        return colors[playerIndex];
     }
 
     #endregion
