@@ -134,11 +134,11 @@ public class MultiplayerNetworkManager : NetworkBehaviour {
     public void StartClient() {
         TryingToJoinGameAction?.Invoke();
 
-        NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnectCallback;
+        NetworkManager.Singleton.OnClientDisconnectCallback += ClientOnClientDisconnectCallback;
         NetworkManager.Singleton.StartClient();
     }
 
-    private void OnClientDisconnectCallback(ulong obj) {
+    private void ClientOnClientDisconnectCallback(ulong clientId) {
         FailedToJoinGameAction?.Invoke();
     }
 
