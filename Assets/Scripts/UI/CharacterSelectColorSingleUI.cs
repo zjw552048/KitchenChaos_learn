@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,6 +22,10 @@ public class CharacterSelectColorSingleUI : MonoBehaviour {
 
         colorImage.color = MultiplayerNetworkManager.Instance.GetColorByColorId(colorId);
         UpdateIsSelected();
+    }
+
+    private void OnDestroy() {
+        MultiplayerNetworkManager.Instance.CharacterSelectPlayersChangedAction -= OnCharacterSelectPlayersChangedAction;
     }
 
     private void OnCharacterSelectPlayersChangedAction() {

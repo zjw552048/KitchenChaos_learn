@@ -1,3 +1,4 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -35,6 +36,10 @@ public class CharacterSelectPlayer : MonoBehaviour {
         CharacterSelectReadyManager.Instance.PlayersReadyStateChangedAction += OnPlayersReadyStateChangedAction;
 
         UpdatePlayer();
+    }
+
+    private void OnDestroy() {
+        MultiplayerNetworkManager.Instance.CharacterSelectPlayersChangedAction -= OnCharacterSelectPlayersChangedAction;
     }
 
     private void OnPlayersReadyStateChangedAction() {
