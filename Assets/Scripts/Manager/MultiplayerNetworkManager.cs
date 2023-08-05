@@ -174,7 +174,7 @@ public class MultiplayerNetworkManager : NetworkBehaviour {
         return default;
     }
 
-    private int GetPlayerIndexByClientId(ulong clientId) {
+    public int GetPlayerIndexByClientId(ulong clientId) {
         for (var index = 0; index < characterSelectPlayers.Count; index++) {
             if (characterSelectPlayers[index].clientId == clientId) {
                 return index;

@@ -40,6 +40,11 @@ public class Player : NetworkBehaviour, IKitchenObjectParent {
 
     public override void OnNetworkSpawn() {
         base.OnNetworkSpawn();
+
+        var playerData = MultiplayerNetworkManager.Instance.GetPlayerDataByClientId(OwnerClientId);
+        var playerColor = MultiplayerNetworkManager.Instance.GetColorByColorId(playerData.colorId);
+        playerVisual.SetMaterialColor(playerColor);
+
         /*
          * 注意，每个build.exe运行时，的NetworkManager都会实例化多个player对象:
          * 1. 判断IsOwner时，每个build.exe仅找到自己所拥有的player，执行逻辑
@@ -49,7 +54,9 @@ public class Player : NetworkBehaviour, IKitchenObjectParent {
         if (IsOwner) {
             LocalInstance = this;
 
-            transform.position = spawnPositionList[(int) OwnerClientId];
+            var playerIndex = MultiplayerNetworkManager.Instance.GetPlayerIndexByClientId(OwnerClientId);
+            Debug.Log("Player onNetworkSpawn ownerClientId: " + OwnerClientId);
+            transform.position = spawnPositionList[playerIndex];
             OwnerPlayerSpawnedAction?.Invoke();
         }
 
@@ -57,10 +64,6 @@ public class Player : NetworkBehaviour, IKitchenObjectParent {
             // 服务器本地实例化的Player都会注册该事件
             NetworkManager.Singleton.OnClientDisconnectCallback += OnNetworkClientDisconnectCallback;
         }
-
-        var playerData = MultiplayerNetworkManager.Instance.GetPlayerDataByClientId(OwnerClientId);
-        var playerColor = MultiplayerNetworkManager.Instance.GetColorByColorId(playerData.colorId);
-        playerVisual.SetMaterialColor(playerColor);
     }
 
     private void OnNetworkClientDisconnectCallback(ulong clientId) {
