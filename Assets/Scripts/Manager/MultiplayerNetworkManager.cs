@@ -99,6 +99,7 @@ public class MultiplayerNetworkManager : NetworkBehaviour {
     private void ServerOnClientConnectedCallback(ulong clientId) {
         characterSelectPlayers.Add(new PlayerData {
             clientId = clientId,
+            colorId = GetFirstUnselectedColorId(),
         });
     }
 
@@ -153,9 +154,76 @@ public class MultiplayerNetworkManager : NetworkBehaviour {
         return characterSelectPlayers[playerIndex];
     }
 
-    public Color GetPlayerColorByPlayerIndex(int playerIndex) {
+    public Color GetPlayerColor(int colorId) {
         // 因为playerIndex永远小于colors的最大index，暂时这么实现
-        return colors[playerIndex];
+        return colors[colorId];
+    }
+
+    public PlayerData GetPlayerData() {
+        var clientId = NetworkManager.Singleton.LocalClientId;
+        return GetPlayerDataByClientId(clientId);
+    }
+
+    private PlayerData GetPlayerDataByClientId(ulong clientId) {
+        foreach (var characterSelectPlayer in characterSelectPlayers) {
+            if (characterSelectPlayer.clientId == clientId) {
+                return characterSelectPlayer;
+            }
+        }
+
+        return default;
+    }
+
+    private int GetPlayerIndexByClientId(ulong clientId) {
+        for (var index = 0; index < characterSelectPlayers.Count; index++) {
+            if (characterSelectPlayers[index].clientId == clientId) {
+                return index;
+            }
+        }
+
+        return -1;
+    }
+
+    private int GetFirstUnselectedColorId() {
+        for (var colorId = 0; colorId < colors.Count; colorId++) {
+            if (IsColorUnselected(colorId)) {
+                return colorId;
+            }
+        }
+
+        return -1;
+    }
+
+    private bool IsColorUnselected(int colorId) {
+        foreach (var characterSelectPlayer in characterSelectPlayers) {
+            if (characterSelectPlayer.colorId == colorId) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public void TryChangeCharacterSelectColor(int colorId) {
+        if (!IsColorUnselected(colorId)) {
+            return;
+        }
+
+        ChangeCharacterSelectColorServerRpc(colorId);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void ChangeCharacterSelectColorServerRpc(int colorId, ServerRpcParams serverRpcParams = default) {
+        var clientId = serverRpcParams.Receive.SenderClientId;
+        var playerIndex = GetPlayerIndexByClientId(clientId);
+        if (playerIndex < 0) {
+            return;
+        }
+
+        var playerData = characterSelectPlayers[playerIndex];
+        playerData.colorId = colorId;
+
+        characterSelectPlayers[playerIndex] = playerData;
     }
 
     #endregion

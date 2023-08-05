@@ -32,7 +32,7 @@ public class CharacterSelectPlayer : MonoBehaviour {
             var playerReady = CharacterSelectReadyManager.Instance.IsPlayerReady(playerData.clientId);
             readyTextGameObject.SetActive(playerReady);
 
-            var playerColor = MultiplayerNetworkManager.Instance.GetPlayerColorByPlayerIndex(playerIndex);
+            var playerColor = MultiplayerNetworkManager.Instance.GetPlayerColor(playerData.colorId);
             playerVisual.SetMaterialColor(playerColor);
         } else {
             Hide();
