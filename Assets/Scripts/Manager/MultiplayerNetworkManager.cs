@@ -146,5 +146,9 @@ public class MultiplayerNetworkManager : NetworkBehaviour {
         return playerIndex < selectCharacterPlayers.Count;
     }
 
+    public PlayerData GetPlayerDataByPlayerIndex(int playerIndex) {
+        return selectCharacterPlayers[playerIndex];
+    }
+
     #endregion
 }

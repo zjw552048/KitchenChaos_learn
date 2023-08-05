@@ -1,6 +1,7 @@
 using UnityEngine;
 
 public class SelectCharacterPlayer : MonoBehaviour {
+    [SerializeField] private GameObject readyTextGameObject;
     private int playerIndex;
 
     private void Awake() {
@@ -9,7 +10,12 @@ public class SelectCharacterPlayer : MonoBehaviour {
 
     private void Start() {
         MultiplayerNetworkManager.Instance.SelectCharacterPlayersChangedAction += OnSelectCharacterPlayersChangedAction;
+        SelectCharacterReadyManager.Instance.PlayersReadyStateChangedAction += OnPlayersReadyStateChangedAction;
 
+        UpdatePlayer();
+    }
+
+    private void OnPlayersReadyStateChangedAction() {
         UpdatePlayer();
     }
 
@@ -20,6 +26,10 @@ public class SelectCharacterPlayer : MonoBehaviour {
     private void UpdatePlayer() {
         if (MultiplayerNetworkManager.Instance.IsPlayerIndexConnected(playerIndex)) {
             Show();
+
+            var playerData = MultiplayerNetworkManager.Instance.GetPlayerDataByPlayerIndex(playerIndex);
+            var playerReady = SelectCharacterReadyManager.Instance.IsPlayerReady(playerData.clientId);
+            readyTextGameObject.SetActive(playerReady);
         } else {
             Hide();
         }

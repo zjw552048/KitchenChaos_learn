@@ -1,10 +1,12 @@
+using System;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class SelectCharacterReadyManager : NetworkBehaviour{
+public class SelectCharacterReadyManager : NetworkBehaviour {
     public static SelectCharacterReadyManager Instance { get; private set; }
 
+    public event Action PlayersReadyStateChangedAction;
     private Dictionary<ulong, bool> playersReadyDic;
 
     private void Awake() {
@@ -18,7 +20,7 @@ public class SelectCharacterReadyManager : NetworkBehaviour{
 
     [ServerRpc(RequireOwnership = false)]
     private void SelectCharacterReadyServerRpc(ServerRpcParams serverRpcParams = default) {
-        playersReadyDic[serverRpcParams.Receive.SenderClientId] = true;
+        SelectCharacterReadyClientRpc(serverRpcParams.Receive.SenderClientId);
 
         foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds) {
             if (!playersReadyDic.ContainsKey(clientId) || !playersReadyDic[clientId]) {
@@ -28,5 +30,19 @@ public class SelectCharacterReadyManager : NetworkBehaviour{
         }
 
         SceneLoader.LoadNetworkScene(SceneLoader.SceneName.GameScene);
+    }
+
+    [ClientRpc]
+    private void SelectCharacterReadyClientRpc(ulong clientId) {
+        if (!playersReadyDic.ContainsKey(clientId)) {
+            playersReadyDic[clientId] = false;
+        }
+
+        playersReadyDic[clientId] = !playersReadyDic[clientId];
+        PlayersReadyStateChangedAction?.Invoke();
+    }
+
+    public bool IsPlayerReady(ulong clientId) {
+        return playersReadyDic.ContainsKey(clientId) && playersReadyDic[clientId];
     }
 }
