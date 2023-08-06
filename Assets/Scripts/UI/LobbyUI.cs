@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class LobbyUI : MonoBehaviour {
     [SerializeField] private Button mainMenuBtn;
+    [SerializeField] private TMP_InputField playerNameInputField;
     [SerializeField] private Button createLobbyBtn;
     [SerializeField] private Button quickJoinBtn;
     [SerializeField] private LobbyCreateUI lobbyCreateUI;
@@ -12,6 +13,11 @@ public class LobbyUI : MonoBehaviour {
 
     private void Start() {
         mainMenuBtn.onClick.AddListener(() => { SceneLoader.LoadScene(SceneLoader.SceneName.MainMenuScene); });
+
+        playerNameInputField.text = MultiplayerNetworkManager.Instance.GetPlayerName();
+        playerNameInputField.onValueChanged.AddListener(newPlayerName => {
+            MultiplayerNetworkManager.Instance.SetPlayerName(newPlayerName);
+        });
 
         createLobbyBtn.onClick.AddListener(() => { lobbyCreateUI.Show(); });
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 public class MultiplayerNetworkManager : NetworkBehaviour {
     [SerializeField] private KitchenObjectListSo kitchenObjectListSo;
@@ -14,18 +15,32 @@ public class MultiplayerNetworkManager : NetworkBehaviour {
     private NetworkList<PlayerData> characterSelectPlayers;
 
     public const int MAX_PLAYER_COUNT = 4;
+    private const string PLAYER_NAME_MULTIPLAYER = "PlayerNameMultiplayer";
 
     public event Action TryingToJoinGameAction;
     public event Action FailedToJoinGameAction;
     public event Action CharacterSelectPlayersChangedAction;
 
+    private string playerName;
+
     private void Awake() {
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
+        playerName = PlayerPrefs.GetString(PLAYER_NAME_MULTIPLAYER, "Player" + Random.Range(1, 10000));
+
         // 必须在awake初始化，否则报错：A Native Collection has not been disposed, resulting in a memory leak
         characterSelectPlayers = new NetworkList<PlayerData>();
         characterSelectPlayers.OnListChanged += OnNetworkListCharacterSelectPlayersChanged;
+    }
+
+    public string GetPlayerName() {
+        return playerName;
+    }
+
+    public void SetPlayerName(string newPlayerName) {
+        playerName = newPlayerName;
+        PlayerPrefs.SetString(PLAYER_NAME_MULTIPLAYER, newPlayerName);
     }
 
     private void OnNetworkListCharacterSelectPlayersChanged(NetworkListEvent<PlayerData> changeEvent) {
@@ -90,8 +105,11 @@ public class MultiplayerNetworkManager : NetworkBehaviour {
     #region 创建host、创建client
 
     public void StartHost() {
+        // 仅在server端触发
         NetworkManager.Singleton.ConnectionApprovalCallback += ConnectionApprovalCallback;
+        // 仅在server端和connect所属的客户端会触发
         NetworkManager.Singleton.OnClientConnectedCallback += ServerOnClientConnectedCallback;
+        // 仅在server端和connect所属的客户端会触发
         NetworkManager.Singleton.OnClientDisconnectCallback += ServerOnClientDisconnectCallback;
         NetworkManager.Singleton.StartHost();
     }
@@ -101,6 +119,8 @@ public class MultiplayerNetworkManager : NetworkBehaviour {
             clientId = clientId,
             colorId = GetFirstUnselectedColorId(),
         });
+        // sever端会被调用多次，但是内部判定了clientId所以数据不会有问题
+        SetPlayerNameServerRpc(GetPlayerName());
     }
 
     private void ServerOnClientDisconnectCallback(ulong clientId) {
@@ -134,8 +154,30 @@ public class MultiplayerNetworkManager : NetworkBehaviour {
     public void StartClient() {
         TryingToJoinGameAction?.Invoke();
 
+        // 仅在server端和connect所属的客户端会触发
+        NetworkManager.Singleton.OnClientConnectedCallback += ClientOnClientConnectedCallback;
+        // 仅在server端和connect所属的客户端会触发
         NetworkManager.Singleton.OnClientDisconnectCallback += ClientOnClientDisconnectCallback;
         NetworkManager.Singleton.StartClient();
+    }
+
+    private void ClientOnClientConnectedCallback(ulong clientId) {
+        SetPlayerNameServerRpc(GetPlayerName());
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void SetPlayerNameServerRpc(string clientPlayerName, ServerRpcParams serverRpcParams = default) {
+        var clientId = serverRpcParams.Receive.SenderClientId;
+        var playerIndex = GetPlayerIndexByClientId(clientId);
+        if (playerIndex < 0) {
+            return;
+        }
+
+        var playerData = characterSelectPlayers[playerIndex];
+        playerData.playerName = clientPlayerName;
+        Debug.Log("SetPlayerNameServerRpc: " + clientId + ", clientPlayerName: " + clientPlayerName);
+
+        characterSelectPlayers[playerIndex] = playerData;
     }
 
     private void ClientOnClientDisconnectCallback(ulong clientId) {
@@ -209,11 +251,11 @@ public class MultiplayerNetworkManager : NetworkBehaviour {
             return;
         }
 
-        ChangeCharacterSelectColorServerRpc(colorId);
+        SetPlayerColorServerRpc(colorId);
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void ChangeCharacterSelectColorServerRpc(int colorId, ServerRpcParams serverRpcParams = default) {
+    private void SetPlayerColorServerRpc(int colorId, ServerRpcParams serverRpcParams = default) {
         var clientId = serverRpcParams.Receive.SenderClientId;
         var playerIndex = GetPlayerIndexByClientId(clientId);
         if (playerIndex < 0) {

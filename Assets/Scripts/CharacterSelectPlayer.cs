@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,6 +7,7 @@ using UnityEngine.UI;
 public class CharacterSelectPlayer : MonoBehaviour {
     [SerializeField] private PlayerVisual playerVisual;
     [SerializeField] private GameObject readyTextGameObject;
+    [SerializeField] private TextMeshProUGUI playerNameText;
     [SerializeField] private Button kickPlayerBtn;
     private int playerIndex;
 
@@ -56,6 +58,8 @@ public class CharacterSelectPlayer : MonoBehaviour {
             var playerData = MultiplayerNetworkManager.Instance.GetPlayerDataByPlayerIndex(playerIndex);
             var playerReady = CharacterSelectReadyManager.Instance.IsPlayerReady(playerData.clientId);
             readyTextGameObject.SetActive(playerReady);
+
+            playerNameText.text = playerData.playerName.ToString();
 
             var playerColor = MultiplayerNetworkManager.Instance.GetColorByColorId(playerData.colorId);
             playerVisual.SetMaterialColor(playerColor);
