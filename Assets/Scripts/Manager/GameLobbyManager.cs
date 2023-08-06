@@ -56,11 +56,25 @@ public class GameLobbyManager : MonoBehaviour {
 
     public async void QuickJoin() {
         try {
-            await LobbyService.Instance.QuickJoinLobbyAsync();
+            joinedLobby = await LobbyService.Instance.QuickJoinLobbyAsync();
 
             MultiplayerNetworkManager.Instance.StartClient();
         } catch (LobbyServiceException e) {
             Console.WriteLine(e);
         }
+    }
+    
+    public async void JoinByCode(string code) {
+        try {
+            joinedLobby = await LobbyService.Instance.JoinLobbyByCodeAsync(code);
+
+            MultiplayerNetworkManager.Instance.StartClient();
+        } catch (LobbyServiceException e) {
+            Console.WriteLine(e);
+        }
+    }
+
+    public Lobby GetLobby() {
+        return joinedLobby;
     }
 }
