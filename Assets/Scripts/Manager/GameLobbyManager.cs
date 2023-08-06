@@ -13,6 +13,9 @@ public class GameLobbyManager : MonoBehaviour {
 
     private Lobby joinedLobby;
 
+    private float lobbyHeartbeatTimer;
+    private const float LOBBY_HEARTBEAT_INTERVAL = 15f;
+
     private void Awake() {
         Instance = this;
 
@@ -25,7 +28,6 @@ public class GameLobbyManager : MonoBehaviour {
             return;
         }
 
-
         Debug.Log("Unity Authentication start!");
         var options = new InitializationOptions();
         options.SetProfile(Random.Range(0, 9999).ToString());
@@ -34,6 +36,30 @@ public class GameLobbyManager : MonoBehaviour {
 
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
         Debug.Log("AuthenticationService SignIn done!");
+    }
+
+    private void Update() {
+        HandleHostHeartbeat();
+    }
+
+    private void HandleHostHeartbeat() {
+        if (!IsHost()) {
+            return;
+        }
+
+        lobbyHeartbeatTimer += Time.deltaTime;
+        if (lobbyHeartbeatTimer < LOBBY_HEARTBEAT_INTERVAL) {
+            return;
+        }
+
+        lobbyHeartbeatTimer -= LOBBY_HEARTBEAT_INTERVAL;
+
+        Debug.Log("send heartbeat!");
+        LobbyService.Instance.SendHeartbeatPingAsync(joinedLobby.Id);
+    }
+
+    private bool IsHost() {
+        return joinedLobby != null && joinedLobby.HostId == AuthenticationService.Instance.PlayerId;
     }
 
     public async void CreateLobby(string lobbyName, bool isPrivate) {
@@ -63,7 +89,7 @@ public class GameLobbyManager : MonoBehaviour {
             Console.WriteLine(e);
         }
     }
-    
+
     public async void JoinByCode(string code) {
         try {
             joinedLobby = await LobbyService.Instance.JoinLobbyByCodeAsync(code);
