@@ -13,7 +13,7 @@ public class MultiplayerNetworkManager : NetworkBehaviour {
 
     private NetworkList<PlayerData> characterSelectPlayers;
 
-    private const int MAX_PLAYER_COUNT = 4;
+    public const int MAX_PLAYER_COUNT = 4;
 
     public event Action TryingToJoinGameAction;
     public event Action FailedToJoinGameAction;

@@ -11,5 +11,9 @@ public class MainMenuCleanUpManager : MonoBehaviour {
             NetworkManager.Singleton.Shutdown();
             Destroy(NetworkManager.Singleton.gameObject);
         }
+
+        if (GameLobbyManager.Instance != null) {
+            Destroy(GameLobbyManager.Instance.gameObject);
+        }
     }
 }
