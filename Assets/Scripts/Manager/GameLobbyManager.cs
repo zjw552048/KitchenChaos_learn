@@ -100,6 +100,15 @@ public class GameLobbyManager : MonoBehaviour {
         }
     }
 
+    public async void LeaveLobby() {
+        try {
+            await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id, AuthenticationService.Instance.PlayerId);
+            joinedLobby = null;
+        } catch (LobbyServiceException e) {
+            Console.WriteLine(e);
+        }
+    }
+
     public Lobby GetLobby() {
         return joinedLobby;
     }

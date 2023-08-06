@@ -10,7 +10,10 @@ public class CharacterSelectUI : MonoBehaviour {
 
 
     private void Start() {
-        mainMenuBtn.onClick.AddListener(() => { SceneLoader.LoadScene(SceneLoader.SceneName.MainMenuScene); });
+        mainMenuBtn.onClick.AddListener(() => {
+            GameLobbyManager.Instance.LeaveLobby();
+            SceneLoader.LoadScene(SceneLoader.SceneName.MainMenuScene);
+        });
         readyBtn.onClick.AddListener(() => { CharacterSelectReadyManager.Instance.SetPlayerReady(); });
 
         var lobby = GameLobbyManager.Instance.GetLobby();
