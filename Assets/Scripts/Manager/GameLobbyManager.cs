@@ -109,6 +109,19 @@ public class GameLobbyManager : MonoBehaviour {
         }
     }
 
+    public async void DeleteLobby() {
+        if (!IsHost()) {
+            return;
+        }
+
+        try {
+            await LobbyService.Instance.DeleteLobbyAsync(joinedLobby.Id);
+            joinedLobby = null;
+        } catch (LobbyServiceException e) {
+            Console.WriteLine(e);
+        }
+    }
+
     public Lobby GetLobby() {
         return joinedLobby;
     }

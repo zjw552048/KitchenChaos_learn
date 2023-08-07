@@ -29,6 +29,7 @@ public class CharacterSelectReadyManager : NetworkBehaviour {
             }
         }
 
+        GameLobbyManager.Instance.DeleteLobby();
         SceneLoader.LoadNetworkScene(SceneLoader.SceneName.GameScene);
     }
 
