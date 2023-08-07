@@ -57,14 +57,20 @@ public class MultiplayerNetworkManager : NetworkBehaviour {
     [ServerRpc(RequireOwnership = false)]
     private void SpawnKitchenObjectServerRpc(int kitchenObjectSoIndex,
         NetworkObjectReference kitchenObjectParentNetworkObjectReference) {
+
+        kitchenObjectParentNetworkObjectReference.TryGet(out var kitchenObjectParentNetWorkObject);
+        var kitchenObjectParent = kitchenObjectParentNetWorkObject.GetComponent<IKitchenObjectParent>();
+        // 服务端二次检查,避免客户端因为延迟导致的逻辑错误
+        if (kitchenObjectParent.HasKitchenObject()) {
+            // has kitchenObject
+            return;
+        }
+        
         var kitchenObjectSo = GetKitchenObjectSoByIndex(kitchenObjectSoIndex);
         var kitchenObjectTransform = Instantiate(kitchenObjectSo.prefab);
 
         var kitchenObjectNetworkObject = kitchenObjectTransform.GetComponent<NetworkObject>();
         kitchenObjectNetworkObject.Spawn(true);
-
-        kitchenObjectParentNetworkObjectReference.TryGet(out var kitchenObjectParentNetWorkObject);
-        var kitchenObjectParent = kitchenObjectParentNetWorkObject.GetComponent<IKitchenObjectParent>();
 
         var kitchenObject = kitchenObjectTransform.GetComponent<KitchenObject>();
         kitchenObject.SetKitchenObjectParent(kitchenObjectParent);
@@ -85,6 +91,13 @@ public class MultiplayerNetworkManager : NetworkBehaviour {
     [ServerRpc(RequireOwnership = false)]
     private void DespawnKitchenObjectServerRpc(NetworkObjectReference kitchenObjectNetworkObjectReference) {
         kitchenObjectNetworkObjectReference.TryGet(out var kitchenObjectNetworkObject);
+
+        // 服务端二次检查,避免客户端因为延迟导致的逻辑错误
+        if (kitchenObjectNetworkObject == null) {
+            // has been destroyed
+            return;
+        }
+
         var kitchenObject = kitchenObjectNetworkObject.GetComponent<KitchenObject>();
 
         DespawnKitchenObjectClientRpc(kitchenObjectNetworkObjectReference);

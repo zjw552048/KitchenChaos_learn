@@ -38,6 +38,9 @@ public class PlateKitchenObject : KitchenObject {
     [ClientRpc]
     private void AddIngredientClientRpc(int kitchenObjectSoIndex) {
         var kitchenObjectSo = MultiplayerNetworkManager.Instance.GetKitchenObjectSoByIndex(kitchenObjectSoIndex);
+        if (kitchenObjectSos.Contains(kitchenObjectSo)) {
+            return;
+        }
         kitchenObjectSos.Add(kitchenObjectSo);
         AddIngredientAction?.Invoke(kitchenObjectSo);
     }

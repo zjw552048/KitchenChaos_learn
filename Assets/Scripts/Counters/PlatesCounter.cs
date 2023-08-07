@@ -38,6 +38,10 @@ public class PlatesCounter : BaseCounter {
 
     [ServerRpc]
     private void SpawnPlateServerRpc() {
+        if (currentPlateCount >= MAX_SPAWN_PLATE_COUNT) {
+            return;
+        }
+
         SpawnPlateClientRpc();
     }
 
@@ -63,6 +67,10 @@ public class PlatesCounter : BaseCounter {
 
     [ServerRpc(RequireOwnership = false)]
     private void InteractLogicServerRpc() {
+        if (currentPlateCount <= 0) {
+            return;
+        }
+
         InteractLogicClientRpc();
     }
 

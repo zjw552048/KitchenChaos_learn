@@ -54,8 +54,16 @@ public class CuttingCounter : BaseCounter, IHasProgress {
     [ClientRpc]
     private void InteractLogicPlaceObjectOnCounterClientRpc() {
         var kitchenObject = GetKitchenObject();
+        if (kitchenObject == null) {
+            return;
+        }
+
         var kitchenObjectSo = kitchenObject.GetKitchenObjectSo();
         var cuttingRecipeSo = GetCuttingRecipeByInputSo(kitchenObjectSo);
+        if (cuttingRecipeSo == null) {
+            return;
+        }
+
         // 隐藏进度条
         var cutCount = kitchenObject.GetCurrentCutCount();
         var cutProgress = (float) cutCount / cuttingRecipeSo.needCutCount;
@@ -97,9 +105,17 @@ public class CuttingCounter : BaseCounter, IHasProgress {
 
     [ClientRpc]
     private void CutKitchenObjectClientRpc() {
+        // 二次检查, 避免客户端因为延迟导致的逻辑错误
+        if (!HasKitchenObject()) {
+            return;
+        }
+
         var kitchenObject = GetKitchenObject();
         var kitchenObjectSo = kitchenObject.GetKitchenObjectSo();
         var cuttingRecipeSo = GetCuttingRecipeByInputSo(kitchenObjectSo);
+        if (cuttingRecipeSo == null) {
+            return;
+        }
 
         var curCount = kitchenObject.AddCurrentCutCount();
         var cutProgress = (float) curCount / cuttingRecipeSo.needCutCount;
@@ -110,9 +126,17 @@ public class CuttingCounter : BaseCounter, IHasProgress {
 
     [ServerRpc(RequireOwnership = false)]
     private void CheckCutDoneServerRpc() {
+        // 服务端二次检查,避免客户端因为延迟导致的逻辑错误
+        if (!HasKitchenObject()) {
+            return;
+        }
+
         var kitchenObject = GetKitchenObject();
         var kitchenObjectSo = kitchenObject.GetKitchenObjectSo();
         var cuttingRecipeSo = GetCuttingRecipeByInputSo(kitchenObjectSo);
+        if (cuttingRecipeSo == null) {
+            return;
+        }
 
         var curCount = kitchenObject.GetCurrentCutCount();
         var cutProgress = (float) curCount / cuttingRecipeSo.needCutCount;
