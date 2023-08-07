@@ -16,6 +16,13 @@ public class GameLobbyManager : MonoBehaviour {
     private float lobbyHeartbeatTimer;
     private const float LOBBY_HEARTBEAT_INTERVAL = 15f;
 
+    public event Action CreateLobbyStartedAction;
+    public event Action CreateLobbyFailedAction;
+    
+    public event Action JoinLobbyStartAction;
+    public event Action QuickJoinLobbyFailedAction;
+    public event Action CodeJoinLobbyFailedAction;
+
     private void Awake() {
         Instance = this;
 
@@ -64,6 +71,7 @@ public class GameLobbyManager : MonoBehaviour {
 
     public async void CreateLobby(string lobbyName, bool isPrivate) {
         try {
+            CreateLobbyStartedAction?.Invoke();
             var options = new CreateLobbyOptions {
                 IsPrivate = isPrivate
             };
@@ -76,26 +84,31 @@ public class GameLobbyManager : MonoBehaviour {
             MultiplayerNetworkManager.Instance.StartHost();
             SceneLoader.LoadNetworkScene(SceneLoader.SceneName.CharacterSelectScene);
         } catch (LobbyServiceException e) {
+            CreateLobbyFailedAction?.Invoke();
             Console.WriteLine(e);
         }
     }
 
     public async void QuickJoin() {
         try {
+            JoinLobbyStartAction?.Invoke();
             joinedLobby = await LobbyService.Instance.QuickJoinLobbyAsync();
 
             MultiplayerNetworkManager.Instance.StartClient();
         } catch (LobbyServiceException e) {
+            QuickJoinLobbyFailedAction?.Invoke();
             Console.WriteLine(e);
         }
     }
 
     public async void JoinByCode(string code) {
         try {
+            JoinLobbyStartAction?.Invoke();
             joinedLobby = await LobbyService.Instance.JoinLobbyByCodeAsync(code);
 
             MultiplayerNetworkManager.Instance.StartClient();
         } catch (LobbyServiceException e) {
+            CodeJoinLobbyFailedAction?.Invoke();
             Console.WriteLine(e);
         }
     }
