@@ -101,8 +101,29 @@ public class GameLobbyManager : MonoBehaviour {
     }
 
     public async void LeaveLobby() {
+        if (joinedLobby == null) {
+            return;
+        }
+
         try {
             await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id, AuthenticationService.Instance.PlayerId);
+            joinedLobby = null;
+        } catch (LobbyServiceException e) {
+            Console.WriteLine(e);
+        }
+    }
+
+    public async void KickLeaveLobby(string playerId) {
+        if (joinedLobby == null) {
+            return;
+        }
+
+        if (!IsHost()) {
+            return;
+        }
+
+        try {
+            await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id, playerId);
             joinedLobby = null;
         } catch (LobbyServiceException e) {
             Console.WriteLine(e);
@@ -124,5 +145,9 @@ public class GameLobbyManager : MonoBehaviour {
 
     public Lobby GetLobby() {
         return joinedLobby;
+    }
+
+    public string GetLobbyPlayerId() {
+        return AuthenticationService.Instance.PlayerId;
     }
 }

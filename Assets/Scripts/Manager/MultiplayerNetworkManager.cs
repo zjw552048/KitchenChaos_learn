@@ -121,6 +121,7 @@ public class MultiplayerNetworkManager : NetworkBehaviour {
         });
         // sever端会被调用多次，但是内部判定了clientId所以数据不会有问题
         SetPlayerNameServerRpc(GetPlayerName());
+        SetPlayerIdServerRpc(GameLobbyManager.Instance.GetLobbyPlayerId());
     }
 
     private void ServerOnClientDisconnectCallback(ulong clientId) {
@@ -163,6 +164,7 @@ public class MultiplayerNetworkManager : NetworkBehaviour {
 
     private void ClientOnClientConnectedCallback(ulong clientId) {
         SetPlayerNameServerRpc(GetPlayerName());
+        SetPlayerIdServerRpc(GameLobbyManager.Instance.GetLobbyPlayerId());
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -176,6 +178,21 @@ public class MultiplayerNetworkManager : NetworkBehaviour {
         var playerData = characterSelectPlayers[playerIndex];
         playerData.playerName = clientPlayerName;
         Debug.Log("SetPlayerNameServerRpc: " + clientId + ", clientPlayerName: " + clientPlayerName);
+
+        characterSelectPlayers[playerIndex] = playerData;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void SetPlayerIdServerRpc(string playerId, ServerRpcParams serverRpcParams = default) {
+        var clientId = serverRpcParams.Receive.SenderClientId;
+        var playerIndex = GetPlayerIndexByClientId(clientId);
+        if (playerIndex < 0) {
+            return;
+        }
+
+        var playerData = characterSelectPlayers[playerIndex];
+        playerData.playerId = playerId;
+        Debug.Log("SetPlayerNameServerRpc: " + clientId + ", playerId: " + playerId);
 
         characterSelectPlayers[playerIndex] = playerData;
     }
@@ -274,6 +291,8 @@ public class MultiplayerNetworkManager : NetworkBehaviour {
         NetworkManager.Singleton.DisconnectClient(clientId);
         // 主动断开客户端连接时，存在概率不处罚注册事件，手动触发服务端监听的Disconnect事件
         ServerOnClientDisconnectCallback(clientId);
+
+        GameLobbyManager.Instance.KickLeaveLobby(playerData.playerId.ToString());
     }
 
     #endregion
