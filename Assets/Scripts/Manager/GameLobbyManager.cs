@@ -16,12 +16,17 @@ public class GameLobbyManager : MonoBehaviour {
     private float lobbyHeartbeatTimer;
     private const float LOBBY_HEARTBEAT_INTERVAL = 15f;
 
+    private float lobbyQueryTimer;
+    private const float LOBBY_QUERY_INTERVAL = 5f;
+
     public event Action CreateLobbyStartedAction;
     public event Action CreateLobbyFailedAction;
-    
+
     public event Action JoinLobbyStartAction;
     public event Action QuickJoinLobbyFailedAction;
     public event Action CodeJoinLobbyFailedAction;
+
+    public event Action<List<Lobby>> QueryLobbySuccessAction;
 
     private void Awake() {
         Instance = this;
@@ -47,6 +52,7 @@ public class GameLobbyManager : MonoBehaviour {
 
     private void Update() {
         HandleHostHeartbeat();
+        HandleQueryLobby();
     }
 
     private void HandleHostHeartbeat() {
@@ -61,12 +67,44 @@ public class GameLobbyManager : MonoBehaviour {
 
         lobbyHeartbeatTimer -= LOBBY_HEARTBEAT_INTERVAL;
 
-        Debug.Log("send heartbeat!");
         LobbyService.Instance.SendHeartbeatPingAsync(joinedLobby.Id);
+    }
+
+    private void HandleQueryLobby() {
+        if (!AuthenticationService.Instance.IsSignedIn) {
+            return;
+        }
+
+        if (joinedLobby != null) {
+            return;
+        }
+
+        lobbyQueryTimer += Time.deltaTime;
+        if (lobbyQueryTimer < LOBBY_QUERY_INTERVAL) {
+            return;
+        }
+
+        lobbyQueryTimer -= LOBBY_QUERY_INTERVAL;
+
+        QueryLobby();
     }
 
     private bool IsHost() {
         return joinedLobby != null && joinedLobby.HostId == AuthenticationService.Instance.PlayerId;
+    }
+
+    private async void QueryLobby() {
+        try {
+            var options = new QueryLobbiesOptions {
+                Filters = new List<QueryFilter> {
+                    new QueryFilter(QueryFilter.FieldOptions.AvailableSlots, 0.ToString(), QueryFilter.OpOptions.GT),
+                }
+            };
+            var queryResponse = await LobbyService.Instance.QueryLobbiesAsync(options);
+            QueryLobbySuccessAction?.Invoke(queryResponse.Results);
+        } catch (LobbyServiceException e) {
+            Console.WriteLine(e);
+        }
     }
 
     public async void CreateLobby(string lobbyName, bool isPrivate) {
@@ -105,6 +143,18 @@ public class GameLobbyManager : MonoBehaviour {
         try {
             JoinLobbyStartAction?.Invoke();
             joinedLobby = await LobbyService.Instance.JoinLobbyByCodeAsync(code);
+
+            MultiplayerNetworkManager.Instance.StartClient();
+        } catch (LobbyServiceException e) {
+            CodeJoinLobbyFailedAction?.Invoke();
+            Console.WriteLine(e);
+        }
+    }
+    
+    public async void JoinById(string id) {
+        try {
+            JoinLobbyStartAction?.Invoke();
+            joinedLobby = await LobbyService.Instance.JoinLobbyByIdAsync(id);
 
             MultiplayerNetworkManager.Instance.StartClient();
         } catch (LobbyServiceException e) {
