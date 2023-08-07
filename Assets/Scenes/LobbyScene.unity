@@ -5599,7 +5599,7 @@ MonoBehaviour:
   RunInBackground: 1
   LogLevel: 1
   NetworkConfig:
-    ProtocolVersion: 0
+    ProtocolVersion: 1
     NetworkTransport: {fileID: 2111364265}
     PlayerPrefab: {fileID: 0}
     NetworkPrefabs:
