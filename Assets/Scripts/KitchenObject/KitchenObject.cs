@@ -69,7 +69,7 @@ public class KitchenObject : NetworkBehaviour {
         targetParentNetworkObjectReference.TryGet(out var targetParentNetworkObject);
         var targetParent = targetParentNetworkObject.GetComponent<IKitchenObjectParent>();
         if (targetParent.HasKitchenObject()) {
-            Debug.LogError("targetParent already has a kitchenObject!");
+            return;
         }
 
         kitchenObjectParent?.SetKitchenObject(null);
