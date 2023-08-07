@@ -6,6 +6,7 @@ using Unity.Services.Core;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 public class GameLobbyManager : MonoBehaviour {
@@ -71,6 +72,10 @@ public class GameLobbyManager : MonoBehaviour {
     }
 
     private void HandleQueryLobby() {
+        if (SceneManager.GetActiveScene().name != SceneLoader.SceneName.LobbyScene.ToString()) {
+            return;
+        }
+
         if (!AuthenticationService.Instance.IsSignedIn) {
             return;
         }
