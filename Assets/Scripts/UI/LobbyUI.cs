@@ -41,6 +41,10 @@ public class LobbyUI : MonoBehaviour {
         UpdateLobbyContainer(new List<Lobby>());
     }
 
+    private void OnDestroy() {
+        GameLobbyManager.Instance.QueryLobbySuccessAction -= OnQueryLobbySuccessAction;
+    }
+
     private void OnQueryLobbySuccessAction(List<Lobby> lobbyList) {
         UpdateLobbyContainer(lobbyList);
     }
