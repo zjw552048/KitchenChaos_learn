@@ -28,7 +28,10 @@ public class LobbyUI : MonoBehaviour {
             MultiplayerNetworkManager.Instance.SetPlayerName(newPlayerName);
         });
 
-        createLobbyBtn.onClick.AddListener(() => { lobbyCreateUI.Show(); });
+        createLobbyBtn.onClick.AddListener(() => {
+            Hide();
+            lobbyCreateUI.Show();
+        });
 
         quickJoinBtn.onClick.AddListener(() => { GameLobbyManager.Instance.QuickJoin(); });
 
@@ -38,6 +41,9 @@ public class LobbyUI : MonoBehaviour {
         });
 
         GameLobbyManager.Instance.QueryLobbySuccessAction += OnQueryLobbySuccessAction;
+
+        Show();
+
         UpdateLobbyContainer(new List<Lobby>());
     }
 
@@ -65,5 +71,15 @@ public class LobbyUI : MonoBehaviour {
             var lobbySingleUI = lobbyTransform.GetComponent<LobbySingleUI>();
             lobbySingleUI.SetLobby(lobby);
         }
+    }
+
+    public void Show() {
+        gameObject.SetActive(true);
+        
+        createLobbyBtn.Select();
+    }
+
+    private void Hide() {
+        gameObject.SetActive(false);
     }
 }

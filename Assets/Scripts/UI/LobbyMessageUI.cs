@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class LobbyMessageUI : MonoBehaviour {
+    [SerializeField] private LobbyUI lobbyUI;
     [SerializeField] private Button closeBtn;
     [SerializeField] private TextMeshProUGUI reasonText;
 
@@ -67,9 +68,13 @@ public class LobbyMessageUI : MonoBehaviour {
 
     private void Show() {
         gameObject.SetActive(true);
+        
+        closeBtn.Select();
     }
 
     private void Hide() {
         gameObject.SetActive(false);
+        
+        lobbyUI.Show();
     }
 }

@@ -2,6 +2,9 @@ using System;
 using UnityEngine;
 
 public class ConnectingUI : MonoBehaviour {
+    
+    [SerializeField] private LobbyUI lobbyUI;
+
     private void Start() {
         MultiplayerNetworkManager.Instance.TryingToJoinGameAction += OnTryingToJoinGameAction;
         MultiplayerNetworkManager.Instance.FailedToJoinGameAction += OnFailedToJoinGameAction;
@@ -28,5 +31,7 @@ public class ConnectingUI : MonoBehaviour {
 
     private void Hide() {
         gameObject.SetActive(false);
+        
+        lobbyUI.Show();
     }
 }

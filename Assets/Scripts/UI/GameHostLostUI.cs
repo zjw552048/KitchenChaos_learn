@@ -27,6 +27,8 @@ public class GameHostLostUI : MonoBehaviour {
 
     private void Show() {
         gameObject.SetActive(true);
+        
+        mainMenuBtn.Select();
     }
 
     private void Hide() {

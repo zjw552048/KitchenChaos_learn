@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class LobbyCreateUI : MonoBehaviour {
+    [SerializeField] private LobbyUI lobbyUI;
     [SerializeField] private TMP_InputField lobbyNameInputField;
     [SerializeField] private Button createPrivateBtn;
     [SerializeField] private Button createPublicBtn;
@@ -27,9 +28,13 @@ public class LobbyCreateUI : MonoBehaviour {
 
     public void Show() {
         gameObject.SetActive(true);
+        
+        createPublicBtn.Select();
     }
 
     private void Hide() {
         gameObject.SetActive(false);
+
+        lobbyUI.Show();
     }
 }
