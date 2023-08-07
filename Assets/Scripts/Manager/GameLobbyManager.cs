@@ -143,6 +143,9 @@ public class GameLobbyManager : MonoBehaviour {
     #region Lobby Logic
 
     private async void QueryLobby() {
+        if (UnityServices.State != ServicesInitializationState.Initialized) {
+            return;
+        }
         try {
             var options = new QueryLobbiesOptions {
                 Filters = new List<QueryFilter> {
@@ -157,6 +160,9 @@ public class GameLobbyManager : MonoBehaviour {
     }
 
     public async void CreateLobby(string lobbyName, bool isPrivate) {
+        if (UnityServices.State != ServicesInitializationState.Initialized) {
+            return;
+        }
         try {
             CreateLobbyStartedAction?.Invoke();
             var options = new CreateLobbyOptions {
@@ -191,6 +197,9 @@ public class GameLobbyManager : MonoBehaviour {
     }
 
     public async void QuickJoin() {
+        if (UnityServices.State != ServicesInitializationState.Initialized) {
+            return;
+        }
         try {
             JoinLobbyStartAction?.Invoke();
             joinedLobby = await LobbyService.Instance.QuickJoinLobbyAsync();
@@ -208,6 +217,9 @@ public class GameLobbyManager : MonoBehaviour {
     }
 
     public async void JoinByCode(string code) {
+        if (UnityServices.State != ServicesInitializationState.Initialized) {
+            return;
+        }
         try {
             JoinLobbyStartAction?.Invoke();
             joinedLobby = await LobbyService.Instance.JoinLobbyByCodeAsync(code);
@@ -225,6 +237,9 @@ public class GameLobbyManager : MonoBehaviour {
     }
 
     public async void JoinById(string id) {
+        if (UnityServices.State != ServicesInitializationState.Initialized) {
+            return;
+        }
         try {
             JoinLobbyStartAction?.Invoke();
             joinedLobby = await LobbyService.Instance.JoinLobbyByIdAsync(id);
@@ -242,6 +257,9 @@ public class GameLobbyManager : MonoBehaviour {
     }
 
     public async void LeaveLobby() {
+        if (UnityServices.State != ServicesInitializationState.Initialized) {
+            return;
+        }
         if (joinedLobby == null) {
             return;
         }
@@ -255,6 +273,9 @@ public class GameLobbyManager : MonoBehaviour {
     }
 
     public async void KickLeaveLobby(string playerId) {
+        if (UnityServices.State != ServicesInitializationState.Initialized) {
+            return;
+        }
         if (joinedLobby == null) {
             return;
         }
@@ -272,6 +293,9 @@ public class GameLobbyManager : MonoBehaviour {
     }
 
     public async void DeleteLobby() {
+        if (UnityServices.State != ServicesInitializationState.Initialized) {
+            return;
+        }
         if (!IsHost()) {
             return;
         }
@@ -289,6 +313,10 @@ public class GameLobbyManager : MonoBehaviour {
     }
 
     public string GetLobbyPlayerId() {
+        if (MultiplayerNetworkManager.SinglePlayerMode) {
+            return "localSinglePlayer";
+        }
+
         return AuthenticationService.Instance.PlayerId;
     }
 

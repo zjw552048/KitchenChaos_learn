@@ -2,12 +2,18 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class MainMenuUI : MonoBehaviour {
-    [SerializeField] private Button playBtn;
+    [SerializeField] private Button multiplayerBtn;
+    [SerializeField] private Button singlePlayerBtn;
     [SerializeField] private Button quitBtn;
 
     private void Start() {
         Time.timeScale = 1f;
-        playBtn.onClick.AddListener(() => {
+        multiplayerBtn.onClick.AddListener(() => {
+            MultiplayerNetworkManager.SinglePlayerMode = false;
+            SceneLoader.LoadScene(SceneLoader.SceneName.LobbyScene);
+        });
+        singlePlayerBtn.onClick.AddListener(() => {
+            MultiplayerNetworkManager.SinglePlayerMode = true;
             SceneLoader.LoadScene(SceneLoader.SceneName.LobbyScene);
         });
 

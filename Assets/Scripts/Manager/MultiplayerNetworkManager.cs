@@ -23,6 +23,8 @@ public class MultiplayerNetworkManager : NetworkBehaviour {
 
     private string playerName;
 
+    public static bool SinglePlayerMode;
+
     private void Awake() {
         Instance = this;
         DontDestroyOnLoad(gameObject);
@@ -32,6 +34,13 @@ public class MultiplayerNetworkManager : NetworkBehaviour {
         // 必须在awake初始化，否则报错：A Native Collection has not been disposed, resulting in a memory leak
         characterSelectPlayers = new NetworkList<PlayerData>();
         characterSelectPlayers.OnListChanged += OnNetworkListCharacterSelectPlayersChanged;
+    }
+
+    private void Start() {
+        if (SinglePlayerMode) {
+            StartHost();
+            SceneLoader.LoadNetworkScene(SceneLoader.SceneName.GameScene);
+        }
     }
 
     public string GetPlayerName() {
@@ -57,7 +66,6 @@ public class MultiplayerNetworkManager : NetworkBehaviour {
     [ServerRpc(RequireOwnership = false)]
     private void SpawnKitchenObjectServerRpc(int kitchenObjectSoIndex,
         NetworkObjectReference kitchenObjectParentNetworkObjectReference) {
-
         kitchenObjectParentNetworkObjectReference.TryGet(out var kitchenObjectParentNetWorkObject);
         var kitchenObjectParent = kitchenObjectParentNetWorkObject.GetComponent<IKitchenObjectParent>();
         // 服务端二次检查,避免客户端因为延迟导致的逻辑错误
@@ -65,7 +73,7 @@ public class MultiplayerNetworkManager : NetworkBehaviour {
             // has kitchenObject
             return;
         }
-        
+
         var kitchenObjectSo = GetKitchenObjectSoByIndex(kitchenObjectSoIndex);
         var kitchenObjectTransform = Instantiate(kitchenObjectSo.prefab);
 
@@ -309,4 +317,5 @@ public class MultiplayerNetworkManager : NetworkBehaviour {
     }
 
     #endregion
+
 }
