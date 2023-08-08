@@ -8,6 +8,11 @@ public class MainMenuUI : MonoBehaviour {
     [SerializeField] private Button quitBtn;
     [SerializeField] private GameObject logo;
 
+    private void Awake() {
+        // 屏幕常亮
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
+    }
+
     private void Start() {
         Time.timeScale = 1f;
         multiplayerBtn.onClick.AddListener(() => {
