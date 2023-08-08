@@ -4993,7 +4993,7 @@ GameObject:
   - component: {fileID: 570746832}
   - component: {fileID: 570746833}
   m_Layer: 5
-  m_Name: MobileOnScreenInput
+  m_Name: MobilePlatformModify
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
