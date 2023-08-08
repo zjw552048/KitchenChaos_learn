@@ -14,7 +14,7 @@ public class SoundManager : MonoBehaviour {
     private void Awake() {
         Instance = this;
 
-        volumeScaler = PlayerPrefs.GetFloat(SOUND_VOLUME_KEY, MAX_VOLUME / 2);
+        volumeScaler = PlayerPrefs.GetFloat(SOUND_VOLUME_KEY, MAX_VOLUME / 10 * 8);
     }
 
     public float GetVolume() {
