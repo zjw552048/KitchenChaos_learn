@@ -161,4 +161,15 @@ public class PlayerInput : MonoBehaviour {
             })
             .Start();
     }
+
+    public void ModifyMovementStickDeadZone() {
+        // return;
+        var bindingIndex = 10;
+        var action = playerInputActions.Player.Movement;
+        var binding = action.bindings[bindingIndex];
+        if (binding.processors != null) {
+            binding.overrideProcessors = "StickDeadzone(min=0.125)";
+            action.ApplyBindingOverride(bindingIndex,binding);
+        }
+    }
 }

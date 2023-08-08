@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ShowByPlatfrom : MonoBehaviour {
+public class ShowByPlatform : MonoBehaviour {
     private void Awake() {
         var platform = Application.platform;
         if (platform is RuntimePlatform.Android or RuntimePlatform.IPhonePlayer) {
@@ -12,6 +12,7 @@ public class ShowByPlatfrom : MonoBehaviour {
 
     private void Show() {
         gameObject.SetActive(true);
+        PlayerInput.Instance.ModifyMovementStickDeadZone();
     }
 
     private void Hide() {
